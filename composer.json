@@ -1,0 +1,35 @@
+{
+
+    "name": "pixi/api",
+
+    "version": "0.0.1",
+
+    "description": "Soap client needed to connection to pixi* SOAP api",
+
+    "license": "MIT",
+
+    "authors": [
+        {
+            "name": "Silvester Maraz",
+            "email": "smaraz@pixi.eu"
+        },
+		{
+            "name": "Korbinian Ober",
+            "email": "ko@pixi.eu"
+        }
+    ],
+
+    "minimum-stability": "dev",
+
+    "require-dev": {
+        "php": ">=5.3.3",
+        "codeception/codeception": "1.8.*"
+    },
+
+    "autoload": {
+    	"psr-0": {
+        	"Pixi": "src/"
+		}
+	}
+
+}
