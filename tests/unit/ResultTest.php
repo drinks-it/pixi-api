@@ -259,6 +259,23 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $result = new Result($hardcodedResultSetArray);
         $this->assertTrue($result->hasMultipleResultsets());
     }
+    
+    public function testGetResultSetEmptyResult()
+    {
+        $hardcodedEmptyResultSetArray = array(
+            'SqlRowSet' => array(
+                array(
+                    'diffgram' => null
+                )
+            )
+        );
+        
+        $result = new Result($hardcodedEmptyResultSetArray);
+        $this->assertSame(array(), $result->getResultset());
+        
+    }
+    
+    
 }
 
 /**

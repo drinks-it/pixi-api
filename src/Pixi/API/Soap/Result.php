@@ -62,6 +62,7 @@ class Result
     {
         /* Check if result has multiple row sets */
         if(!empty($data['diffgram'])) {
+
             /* Check if the row of the row set has multiple items */
             if(count($data['diffgram']['SqlRowSet1']['row']) === count($data['diffgram']['SqlRowSet1']['row'], COUNT_RECURSIVE)) {
                 /* Return single row in array for unified results */
@@ -69,7 +70,7 @@ class Result
             }
             return $data['diffgram']['SqlRowSet1']['row'];
 
-        } else {
+        } else if(!empty($data[0]['diffgram'])) {
 
             for ($i = 0; $i < count($data); $i++) {
                 $j = $i + 1;
@@ -78,6 +79,8 @@ class Result
             }
             return $result;
         }
+		
+		return array();
     }
 
     /**
