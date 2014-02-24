@@ -2,7 +2,6 @@
 
     "name": "pixi/api",
 
-    "version": "0.0.1",
 
     "description": "Soap client needed to connection to pixi* SOAP api",
 
