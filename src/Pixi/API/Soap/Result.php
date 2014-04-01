@@ -37,11 +37,6 @@ class Result
             $result = $this->object2array($result);
         }
 
-        /* Check if something failed and return the message */
-        if($this->findKey($result, 'Message')) {
-            throw new \Exception($result['SqlMessage']['Message']);
-        }
-
         /* Check if results are present */
         if($this->findKey($result, 'diffgram')) {
             return $this->formatResult($result['SqlRowSet']);
