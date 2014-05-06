@@ -59,7 +59,7 @@ class Result
         if(!empty($data['diffgram'])) {
 
             /* Check if the row of the row set has multiple items */
-            if(count($data['diffgram']['SqlRowSet1']['row']) === count($data['diffgram']['SqlRowSet1']['row'], COUNT_RECURSIVE)) {
+            if(!isset($data['diffgram']['SqlRowSet1']['row'][0])) {
                 /* Return single row in array for unified results */
                 return array($data['diffgram']['SqlRowSet1']['row']);
             }

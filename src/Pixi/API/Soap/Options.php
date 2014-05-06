@@ -9,9 +9,9 @@ class Options
         'soap_version' => SOAP_1_2
     );
 
-    public function __construct($login, $password, $uri)
+    public function __construct($login, $password, $uri, $namespace = null)
     {
-        $this->setLogin($login)->setPassword($password)->setUri($uri);
+        $this->setLogin($login)->setPassword($password)->setUri($uri)->setNamespace(empty($namespace) ? $uri : $namespace);
         return $this;
     }
 
@@ -37,6 +37,11 @@ class Options
     public function getOptions()
     {
         return $this->options;
+    }
+    
+    public function setNamespace($namespace) {
+    	$this->options['namespace'] = $namespace;
+    	return $this;
     }
 
     public function setOptions(array $options)
