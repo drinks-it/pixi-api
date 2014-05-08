@@ -39,7 +39,15 @@ class Result
 
         /* Check if results are present */
         if($this->findKey($result, 'diffgram')) {
-            return $this->formatResult($result['SqlRowSet']);
+        	if (isset($result['SqlRowSet']))
+            	return $this->formatResult($result['SqlRowSet']);
+        	else {
+        		foreach ($result as $subresult) {
+        			if (isset($subresult['SqlRowSet'])) {
+        				return $this->formatResult($subresult['SqlRowSet']);
+        			}
+        		}
+        	}
         }
 
         throw new \Exception('There was an error in the incomming resultset');
