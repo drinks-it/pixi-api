@@ -50,7 +50,7 @@ class Client extends \SoapClient
             $result = parent::__call($function_name, $vars);
 
             $this->content = new Result($result);
-
+            $this->content->setIgnoreErrors($this->ignore_errors);
             return $this->content;
 
         } else {
@@ -70,5 +70,17 @@ class Client extends \SoapClient
         parent::__construct(null, $options->getOptions());
 
     }
-
+	/**
+	 * Whether result faults should be ignored or not
+	 * @var bool
+	 */
+    private $ignore_errors = false;
+    
+    /**
+     * Sets whether to ignore result faults or not.
+     * @param string $b		true if SOAP faults should be ignored, false if not
+     */
+    public function setIgnoreErrors($b = true) {
+    	$this->ignore_errors = $b;
+    }
 }

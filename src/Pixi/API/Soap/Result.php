@@ -50,7 +50,11 @@ class Result
         	}
         }
 
-        throw new \Exception('There was an error in the incomming resultset');
+        /* There is no result set, but there is also no error occured */
+        if (isset($result['SqlResultCode']) && $result['SqlResultCode'] == 0)
+        	return array();
+        if (!$this->ignore_errors)
+        	throw new \Exception('There was an error in the incomming resultset.'."\nPayload: ".print_r($result, true));
     }
 
     /**
@@ -181,4 +185,34 @@ class Result
         return is_array($this->_result);
     }
 
+    /**
+     * Whether result faults should be ignored or not
+     * @var bool
+     */
+    private $ignore_errors = false;
+    
+    /**
+     * Sets whether to ignore result faults or not.
+     * @param string $b		true if SOAP faults should be ignored, false if not
+     */
+    public function setIgnoreErrors($b = true) {
+    	$this->ignore_errors = $b;
+    }
+    /**
+     * true, if this result has one or more SQL messages, false if not
+     * @return bool
+     */
+    public function hasMessages() {
+    	 return isset($this->_result->SqlMessage);
+    }
+    /**
+     * returns all SQL messages available in this result
+     * @return array
+     */
+    public function getMessages() {
+    	if ($this->hasMessages())
+    		return isset($this->_result->SqlMessage[0]) ? $this->_result->SqlMessage : array($this->_result->SqlMessage);
+    	else
+    		return array();
+    }
 }
