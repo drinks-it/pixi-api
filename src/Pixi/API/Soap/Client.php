@@ -92,7 +92,7 @@ class Client extends \SoapClient
      * the pixi database.
      * 
      * @access public
-     * @return mixed Revisionnumber, Exception or false
+     * @return mixed Revisionnumber or Exception
      */
     public function getRevision()
     {
