@@ -106,7 +106,7 @@ class Client extends \SoapClient
         $request = $this->pixiSysGetCallInfo(array('CallName' => 'pixiSysGetCurrentRevision'));
         $response = $request->getResultSet();
         
-        if(strstr($response[0]['StatusMessage'], 'not installed')) {
+        if(isset($response[0]['StatusMessage']) && strstr($response[0]['StatusMessage'], 'not installed')) {
             throw new SoapExceptions("Could not find revision number. API call pixiSysGetCurrentRevision is missing on the database", 1);
         }
         throw new SoapExceptions("Revision version not found",0);
