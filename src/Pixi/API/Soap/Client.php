@@ -83,4 +83,32 @@ class Client extends \SoapClient
     public function setIgnoreErrors($b = true) {
     	$this->ignore_errors = $b;
     }
+    
+    /**
+     * GetRevision
+     * 
+     * This method returns the current API revision that is applied to
+     * the pixi database.
+     * 
+     * @access public
+     * @return mixed Revisionnumber, Exception or false
+     */
+    public function getRevision()
+    {
+        $request = $this->pixiSysGetCurrentRevision();
+        $response = $request->getResultSet();
+        
+        if(count($response) > 0) {
+            return $response[0]['CurrentRevision'];
+        }
+        
+        $request = $this->pixiSysGetCallInfo(array('CallName' => 'pixiSysGetCurrentRevision'));
+        $response = $request->getResultSet();
+        
+        if(strstr($response[0]['StatusMessage'], 'not installed')) {
+            throw new \Exception('Could not find revision number. API call pixiSysGetCurrentRevision is missing on the database');
+        }
+        
+        return false;
+    }
 }
