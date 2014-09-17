@@ -1,6 +1,6 @@
 <?php
 
-namespace Pixi\API\Soap;
+namespace Pixi\API\Soap\Exception;
 
 class PixiApiException extends \Exception 
 {
