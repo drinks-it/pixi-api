@@ -3,7 +3,7 @@
 namespace Pixi\API\Soap;
 
 use Pixi\API\Soap\Result;
-use Pixi\API\Soap\SoapExceptions;
+use Pixi\API\Soap\Exception\PixiApiException;
 
 class Client extends \SoapClient
 {
@@ -107,8 +107,9 @@ class Client extends \SoapClient
         $response = $request->getResultSet();
         
         if(isset($response[0]['StatusMessage']) && strstr($response[0]['StatusMessage'], 'not installed')) {
-            throw new SoapExceptions("Could not find revision number. API call pixiSysGetCurrentRevision is missing on the database", 1);
+            throw new PixiApiException("Could not find revision number. API call pixiSysGetCurrentRevision is missing on the database", 1);
         }
-        throw new SoapExceptions("Revision version not found",0);
+        
+        throw new PixiApiException("Revision version not found", 0);
     }
 }
