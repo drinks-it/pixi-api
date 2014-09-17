@@ -21,8 +21,7 @@
     "minimum-stability": "dev",
 
     "require-dev": {
-        "php": ">=5.3.3",
-        "codeception/codeception": "1.8.*"
+        "php": ">=5.3.3"
     },
 
     "autoload": {
