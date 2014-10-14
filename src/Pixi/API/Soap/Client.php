@@ -3,6 +3,7 @@ namespace Pixi\API\Soap;
 
 use Pixi\API\Soap\Result;
 use Pixi\API\Soap\Exception\PixiApiException;
+use Pixi\AppsFactory\Environment;
 
 class Client extends \SoapClient
 {

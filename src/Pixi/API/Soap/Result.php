@@ -28,7 +28,6 @@ class Result
     function getResultset()
     {
         $result = $this->_result;
-        $return = array();
 
         /* Return immediatelly if result is an function call result */
         if(!is_array($result) && !is_object($result)) {
@@ -51,10 +50,14 @@ class Result
         }
 
         /* There is no result set, but there is also no error occured */
-        if (isset($result['SqlResultCode']) && $result['SqlResultCode'] == 0)
+        if (isset($result['SqlResultCode']) && $result['SqlResultCode'] == 0) {
         	return array();
-        if (!$this->ignore_errors)
+        }
+        
+        if (!$this->ignore_errors) {
         	throw new \Exception('There was an error in the incomming resultset.'."\nPayload: ".print_r($result, true));
+        }
+        
     }
 
     /**
@@ -78,13 +81,17 @@ class Result
             return $data['diffgram']['SqlRowSet1']['row'];
 
         } else if(!empty($data[0]['diffgram'])) {
-
+            
+            $result = array();
+            
             for ($i = 0; $i < count($data); $i++) {
                 $j = $i + 1;
                 $rowSet = "SqlRowSet" . $j;
                 $result[] = array($data[$i]['diffgram'][$rowSet]['row']);
             }
+            
             return $result;
+            
         }
 		
 		return array();
@@ -101,6 +108,7 @@ class Result
     private function object2array($obj)
     {
         $_arr = is_object($obj) ? get_object_vars($obj) : $obj;
+        $arr = array();
         foreach ($_arr as $key => $val) {
             $val = (is_array($val) || is_object($val)) ? $this->object2array($val) : $val;
             $arr[$key] = $val;
