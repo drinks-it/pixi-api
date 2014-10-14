@@ -2,10 +2,16 @@
 
     "name": "pixi/api",
 
-
     "description": "Soap client needed to connection to pixi* SOAP api",
 
     "license": "MIT",
+    
+    "repositories":[
+        {
+            "type":"vcs",
+            "url":"https://bitbucket.org/pixi_software/pixi-sdk-factory"
+        }
+    ],
 
     "authors": [
         {
@@ -18,10 +24,8 @@
         }
     ],
 
-    "minimum-stability": "dev",
-
-    "require-dev": {
-        "php": ">=5.3.3"
+    "require": {
+        "pixi/factory":"0.0.*"
     },
 
     "autoload": {
