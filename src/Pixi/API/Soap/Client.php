@@ -12,6 +12,20 @@ class Client extends \SoapClient
      * @var \Pixi\API\Soap\Result Value will be kept
      */
     public $content;
+    
+    /**
+     * Whether result faults should be ignored or not
+     *
+     * @var bool
+     */
+    private $ignore_errors = false;
+    
+    /**
+     * Http stream context for the soap client
+     * 
+     * @var string
+     */
+    public $headerStream;
 
     /**
      * The constructor is overwritten, so it can be initalized without any parameters
@@ -21,6 +35,9 @@ class Client extends \SoapClient
      */
     public function __construct($wsdl = null, $options = null)
     {
+        $this->headerStream = stream_context_create();
+        $options['stream_context'] = $this->headerStream;
+        
         if ($wsdl or $options) {
             parent::__construct($wsdl, $options);
         }
@@ -44,6 +61,10 @@ class Client extends \SoapClient
                 }
             }
             
+            stream_context_set_option($this->headerStream, array('http' => array(
+                'header' => "xapp: " . Environment::getAppId() . "\r\n" . 'soapaction: "' . $this->uri  . $function_name . '"'
+            )));
+            
             $result = parent::__call($function_name, $vars);
             
             $this->content = new Result($result);
@@ -64,13 +85,6 @@ class Client extends \SoapClient
     {
         parent::__construct(null, $options->getOptions());
     }
-
-    /**
-     * Whether result faults should be ignored or not
-     * 
-     * @var bool
-     */
-    private $ignore_errors = false;
 
     /**
      * Sets whether to ignore result faults or not.
