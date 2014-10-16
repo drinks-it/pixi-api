@@ -36,10 +36,9 @@ class Client extends \SoapClient
      */
     public function __construct($wsdl = null, $options = null)
     {
-        $this->headerStream = stream_context_create();
-        $options['stream_context'] = $this->headerStream;
-        
         if ($wsdl or $options) {
+            $this->headerStream = stream_context_create();
+            $options['stream_context'] = $this->headerStream;
             parent::__construct($wsdl, $options);
         }
     }
@@ -63,7 +62,7 @@ class Client extends \SoapClient
             }
             
             stream_context_set_option($this->headerStream, array('http' => array(
-                'header' => "xapp: " . Environment::getAppId() . "\r\n" . 'soapaction: "' . $this->uri  . $function_name . '"'
+                'header' => "xapp: " . Environment::getAppId() . "\r\n" . 'soapaction: "' . $this->uri  . $function_name . '"' . "\r\n"
             )));
             
             $result = parent::__call($function_name, $vars);
@@ -84,7 +83,7 @@ class Client extends \SoapClient
      */
     public function setPixiOptions($options)
     {
-        parent::__construct(null, $options->getOptions());
+        $this->__construct(null, $options->getOptions());
     }
 
     /**
