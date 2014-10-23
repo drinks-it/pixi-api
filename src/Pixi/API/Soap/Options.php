@@ -9,9 +9,9 @@ class Options
         'soap_version' => SOAP_1_2
     );
 
-    public function __construct($login, $password, $uri, $namespace = null)
+    public function __construct($login, $password, $uri, $namespace = null, $trace = false)
     {
-        $this->setLogin($login)->setPassword($password)->setUri($uri)->setNamespace(empty($namespace) ? $uri : $namespace);
+        $this->setLogin($login)->setPassword($password)->setUri($uri)->setNamespace(empty($namespace) ? $uri : $namespace)->setTrace($trace);
         return $this;
     }
 
@@ -47,6 +47,12 @@ class Options
     public function setOptions(array $options)
     {
         $this->options = array_merge($this->options, $options);
+    }
+    
+    public function setTrace($trace)
+    {
+        $this->options['trace'] = $trace;
+        return $this;
     }
 
 }
