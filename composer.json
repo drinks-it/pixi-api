@@ -1,37 +1,32 @@
 {
-
-    "name": "pixi/api",
-
-    "description": "Soap client needed to connection to pixi* SOAP api",
-
-    "license": "MIT",
-    
-    "repositories":[
-        {
-            "type":"vcs",
-            "url":"https://bitbucket.org/pixi_software/pixi-sdk-factory"
+    "name" : "pixi/api",
+    "description" : "Soap client needed to connection to pixi* SOAP api",
+    "license" : "MIT",
+    "repositories" : [{
+            "type" : "vcs",
+            "url" : "https://bitbucket.org/pixi_software/pixi-sdk-factory"
         }
     ],
-
-    "authors": [
-        {
-            "name": "Silvester Maraz",
-            "email": "smaraz@pixi.eu"
-        },
-		{
-            "name": "Korbinian Ober",
-            "email": "ko@pixi.eu"
+    "authors" : [{
+            "name" : "Silvester Maraz",
+            "email" : "smaraz@pixi.eu"
+        }, {
+            "name" : "Korbinian Ober",
+            "email" : "ko@pixi.eu"
+        }, {
+            "name" : "Florian Seidl",
+            "email" : "fs@pixi.eu"
         }
     ],
-
-    "require": {
-        "pixi/factory":"0.0.*"
+    "require" : {
+        "pixi/factory" : "0.0.*"
     },
-
-    "autoload": {
-    	"psr-0": {
-        	"Pixi": "src/"
-		}
-	}
-
+    "require-dev" : {
+        "codeception/codeception" : "1.*"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "Pixi" : "src/"
+        }
+    }
 }
