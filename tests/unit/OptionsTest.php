@@ -34,14 +34,16 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
             'login' => 'username',
             'password' => 'password',
             'uri' => 'uri',
-            'location' => 'uri'
+            'location' => 'location',
+            'namespace' => 'location',
+            'trace' => true
         );
 
         $reflectionClass = new \ReflectionClass('Pixi\API\Soap\Options');
         $property = $reflectionClass->getProperty('options');
         $property->setAccessible(true);
 
-        $options = new Options('username', 'password', 'uri');
+        $options = new Options('username', 'password', 'uri', 'location', true);
 
         $this->assertSame($optionsProperty, $property->getValue($options));
     }
@@ -91,7 +93,6 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
         $properties = $property->getValue($options);
 
         $this->assertSame('newUri', $properties['uri']);
-        $this->assertSame('newUri', $properties['location']);
     }
 
     public function testGetOptions()
