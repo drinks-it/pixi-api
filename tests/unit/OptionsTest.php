@@ -95,6 +95,19 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('newUri', $properties['uri']);
     }
 
+    public function testSetSslMethod()
+    {
+        $reflectionClass = new \ReflectionClass('Pixi\API\Soap\Options');
+        $property = $reflectionClass->getProperty('options');
+        $property->setAccessible(true);
+
+        $options = new Options('username', 'password', 'uri');
+        $options->setSslMethod('newSslMethod');
+        $properties = $property->getValue($options);
+
+        $this->assertSame('newSslMethod', $properties['ssl_method']);
+    }
+
     public function testGetOptions()
     {
         $expectedArray = array(
@@ -103,7 +116,9 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
             'login' => 'loginname',
             'password' => 'mysecretPassword',
             'uri' => '/index/Overview',
-            'location' => '/index/Overview'
+            'location' => '/index/Overview',
+            'namespace' => '/index/Overview',
+            'trace' => false
         );
 
         $options = new Options('loginname', 'mysecretPassword', '/index/Overview');
