@@ -40,7 +40,6 @@ class Options
     public function setLocation($location)
     {
         $this->options['location'] = $location;
-        $this->options['namespace'] = $location;
         return $this;
     }
 
