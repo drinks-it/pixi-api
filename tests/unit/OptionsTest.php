@@ -35,7 +35,6 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
             'password' => 'password',
             'uri' => 'uri',
             'location' => 'location',
-            'namespace' => 'location',
             'trace' => true
         );
 
@@ -117,7 +116,6 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
             'password' => 'mysecretPassword',
             'uri' => '/index/Overview',
             'location' => '/index/Overview',
-            'namespace' => '/index/Overview',
             'trace' => false
         );
 
