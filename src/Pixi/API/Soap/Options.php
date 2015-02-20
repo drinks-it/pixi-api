@@ -9,12 +9,12 @@ class Options
         'soap_version'  => SOAP_1_2
     );
 
-    public function __construct($login, $password, $uri, $namespace = null, $trace = false)
+    public function __construct($login, $password, $uri, $location = null, $trace = false)
     {
         $this->setLogin($login)
             ->setPassword($password)
             ->setUri($uri)
-            ->setNamespace(empty($namespace) ? $uri : $namespace)
+            ->setLocation(empty($location) ? $uri : $location)
             ->setTrace($trace);
         return $this;
     }
@@ -34,7 +34,18 @@ class Options
     public function setUri($uri)
     {
         $this->options['uri'] = $uri;
-        $this->options['location'] = $uri;
+        return $this;
+    }
+
+    public function setLocation($location)
+    {
+        $this->options['location'] = $location;
+        return $this;
+    }
+
+    public function setTrace($trace)
+    {
+        $this->options['trace'] = $trace;
         return $this;
     }
 
@@ -43,21 +54,9 @@ class Options
         return $this->options;
     }
 
-    public function setNamespace($namespace)
-    {
-        $this->options['namespace'] = $namespace;
-        return $this;
-    }
-
     public function setOptions(array $options)
     {
         $this->options = array_merge($this->options, $options);
-    }
-
-    public function setTrace($trace)
-    {
-        $this->options['trace'] = $trace;
-        return $this;
     }
 
     public function setSslMethod($sslMethod)
