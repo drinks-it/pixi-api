@@ -11,34 +11,37 @@ if(file_exists('config.php')) {
 $client = new \Pixi\API\Soap\Client(
 	null,
 	array(
-		"trace" => 1, 
-		"login" => $username, 
-		"password" => $password,
-		"location" => $uri,
-		"uri" => $uri,
-	    'user_agent' => 'pixi API Client 0.1',
-	    'soap_version' => SOAP_1_2
+		"trace" 			=> 1,
+		"login" 			=> $username,
+		"password" 		=> $password,
+		"location" 		=> $location,
+		"uri" 				=> $uri,
+	  'user_agent' 	=> 'pixi API Client 0.1',
+	  'soap_version'=> SOAP_1_2,
+		'ssl_method'	=> SOAP_SSL_METHOD_TLS
 	)
-); 
+);
 
 try {
-    
+
 	//$rs = $client->pixiGetOrderline(array('RowCount' => 10))->getResultset();
 	//$rs = $client->pixiGetOrderline()->getResultset();
 	//$rs = $client->pixiGetShops();
 	//$rs = $client->pixiGetShops(array('ShopID' => 'MAD'));
-	$rs = $client->pixiGetShops(array('ShopID' => 'MAD'))->getResultset();
+	//$rs = $client->pixiGetSupplierOrder(array('SupplOrderNr' => '70000630'))->getResultset();
 
-	print_r($rs);
-	
+	//print_r($rs);
+
+	echo 1 + 2 * 3;
+
 } catch (\SoapFault $s) {
-    
+
     echo $s->getMessage();
-    
+
     print_r($client->__getLastRequest());
-	
+
 } catch(Exception $e) {
-    
+
     print_r($e);
 	echo $e->getMessage()."\n\n";
 	print_r($client->__getLastRequestHeaders());
