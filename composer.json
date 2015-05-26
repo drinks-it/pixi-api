@@ -2,9 +2,10 @@
     "name" : "pixi/api",
     "description" : "Soap client needed to connection to pixi* SOAP api",
     "license" : "MIT",
-    "repositories" : [{
-            "type" : "vcs",
-            "url" : "https://bitbucket.org/pixi_software/pixi-sdk-factory"
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://apps-live.pixi.eu/satis"
         }
     ],
     "authors" : [
