@@ -5,7 +5,6 @@ namespace Pixi\API\Soap;
 /**
  * This object contains a result from pixi* API
  *
- * @author kober
  * @author Florian Seidl
  */
 class Result
