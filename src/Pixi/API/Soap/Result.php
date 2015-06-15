@@ -5,7 +5,6 @@ namespace Pixi\API\Soap;
 /**
  * This object contains a result from pixi* API
  *
- * @author kober
  * @author Florian Seidl
  */
 class Result
@@ -78,6 +77,7 @@ class Result
                 /* Return single row in array for unified results */
                 return array($data['diffgram']['SqlRowSet1']['row']);
             }
+            
             return $data['diffgram']['SqlRowSet1']['row'];
 
         } else if(!empty($data[0]['diffgram'])) {
@@ -85,9 +85,14 @@ class Result
             $result = array();
             
             for ($i = 0; $i < count($data); $i++) {
+                
                 $j = $i + 1;
                 $rowSet = "SqlRowSet" . $j;
-                $result[] = array($data[$i]['diffgram'][$rowSet]['row']);
+                
+                if(isset($data[$i]['diffgram'][$rowSet])) {
+                    $result[] = array($data[$i]['diffgram'][$rowSet]['row']);
+                }
+
             }
             
             return $result;
