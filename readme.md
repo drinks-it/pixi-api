@@ -16,15 +16,21 @@ After including the `autoload.php` into your project you can start using the lib
 To properly initialize the library with your pixi* API you can use following code snipped:
 ```
 :::PHP
+
 <?php
+
 require __DIR__.'/../vendor/autoload.php';
 
 $username = 'pixiDB'; // Your pixi database
 $password = 'scurepsswd'; // Your API password
-$endpoint = 'https://leonidas.api.madgeniuses.net/pixiAPP/'; // Enpoint of your API
+$uri = 'https://leonidas.api.madgeniuses.net/pixiAPP/'; // Enpoint of your API
+$location = 'https://leonidas.api.madgeniuses.net/pixiAPP/'; // if your uri is differend from the endpoint location should be added and uri corrected
 
-$options = new Pixi\API\Soap\Options($username, $password, $endpoint);
+$options = new Pixi\API\Soap\Options($username, $password, $uri, $location);
+$options->allowSelfSigned(true); // if the certificate is self signed
+
 $soapClient = new \Pixi\API\Soap\Client(null, $options->getOptions());
+
 ?>
 ```
 
