@@ -27,6 +27,13 @@ class Client extends \SoapClient
      * @var string
      */
     public $headerStream;
+    
+    /**
+     * Options for the underlying stream_context
+     * 
+     * @var array
+     */
+    public $streamContext = array();
 
     /**
      * The constructor is overwritten, so it can be initalized without any parameters
@@ -36,11 +43,19 @@ class Client extends \SoapClient
      */
     public function __construct($wsdl = null, $options = null)
     {
+        
         if ($wsdl or $options) {
+            
+            if(isset($options['stream_context']) AND is_array($options['stream_context'])) {
+                $this->streamContext = $options['stream_context'];
+            }
+            
             $this->headerStream = stream_context_create();
             $options['stream_context'] = $this->headerStream;
             parent::__construct($wsdl, $options);
+            
         }
+        
     }
 
     /*
@@ -61,9 +76,12 @@ class Client extends \SoapClient
                 }
             }
             
-            stream_context_set_option($this->headerStream, array('http' => array(
-                'header' => "xapp: " . Environment::getAppId() . "\r\n" . 'soapaction: "' . $this->uri  . $function_name . '"' . "\r\n"
-            )));
+            $context = array_merge(
+                $this->streamContext, 
+                ['http' => ['header' => 'xapp: ' . Environment::getAppId() . "\r\n" . 'soapaction: "' . $this->uri  . $function_name . '"' . "\r\n"]]
+            );
+            
+            stream_context_set_option($this->headerStream, $context);
             
             $result = parent::__call($function_name, $vars);
             

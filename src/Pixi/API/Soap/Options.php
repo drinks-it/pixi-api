@@ -18,6 +18,18 @@ class Options
             ->setTrace($trace);
         return $this;
     }
+    
+    public function setStreamContextOptions($options)
+    {
+        $this->options['stream_context'] = $options;
+        return $this;
+    }
+    
+    public function allowSelfSigned($allow = true)
+    {
+        $this->setStreamContextOptions(['ssl' => ['allow_self_signed' => $allow]]);
+        return $this;
+    }
 
     public function setLogin($login)
     {
