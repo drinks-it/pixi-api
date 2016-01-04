@@ -24,7 +24,7 @@ class Result
      * @param int $i Index of the resultset, starting with 1 (default = 1)
      * @return array Content of the requested resultset
      */
-    function getResultset()
+    function getResultSet()
     {
         $result = $this->_result;
 
