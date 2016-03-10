@@ -7,7 +7,7 @@ namespace Pixi\API\Soap;
  *
  * @author Florian Seidl
  */
-class Result
+class Result implements ResultInterface
 {
     private $_result = null;
 

@@ -34,6 +34,11 @@ class Client extends \SoapClient
      * @var array
      */
     public $streamContext = array();
+    
+    /**
+     * @var string Object name for the Result object
+     */
+    public $resultObject = '\Pixi\API\Soap\Result';
 
     /**
      * The constructor is overwritten, so it can be initalized without any parameters
@@ -64,6 +69,7 @@ class Client extends \SoapClient
      */
     public function __call($function_name, $arguments)
     {
+        
         if (substr($function_name, 0, 4) == 'pixi') {
             
             $vars = array();
@@ -83,15 +89,20 @@ class Client extends \SoapClient
             
             stream_context_set_option($this->headerStream, $context);
             
-            $result = parent::__call($function_name, $vars);
+            $resultObject = $this->resultObject;
             
-            $this->content = new Result($result);
+            $this->content = new $resultObject(parent::__call($function_name, $vars));
+            
             $this->content->setIgnoreErrors($this->ignore_errors);
+            
             return $this->content;
+            
         } else {
             
             return parent::__call($function_name, $arguments);
+            
         }
+        
     }
 
     /**
@@ -126,6 +137,7 @@ class Client extends \SoapClient
      */
     public function getRevision()
     {
+        
         $request = $this->pixiSysGetCurrentRevision();
         $response = $request->getResultSet();
         
@@ -143,5 +155,29 @@ class Client extends \SoapClient
         }
         
         throw new PixiApiException("Couldn't find and API revision number", 0);
+        
     }
+    
+    /**
+     * Clear the the content variable of the object. 
+     * Cleaning up memory after big queries.
+     */
+    public function clearContent()
+    {
+        
+        $this->content = null;
+        
+    }
+
+    public function getResultObject()
+    {
+        return $this->resultObject;
+    }
+
+    public function setResultObject($resultObject)
+    {
+        $this->resultObject = $resultObject;
+        return $this;
+    }
+ 
 }
