@@ -4,6 +4,7 @@ namespace Pixi\API\Soap;
 use Pixi\API\Soap\Result;
 use Pixi\API\Soap\Exception\PixiApiException;
 use Pixi\AppsFactory\Environment;
+use Pixi\API\Soap\Transport\CurlTransport;
 
 class Client extends \SoapClient
 {
@@ -39,7 +40,17 @@ class Client extends \SoapClient
      * @var string Object name for the Result object
      */
     public $resultObject = '\Pixi\API\Soap\Result';
-
+    
+    /**
+     * @var array Options which are injected in the constructor.
+     */
+    public $clientOptions = array();
+    
+    /**
+     * @var bool If true, client will use curl for transport
+     */
+    public $useCurl = true;
+    
     /**
      * The constructor is overwritten, so it can be initalized without any parameters
      *
@@ -48,8 +59,10 @@ class Client extends \SoapClient
      */
     public function __construct($wsdl = null, $options = null)
     {
-        
+        $options['trace'] = true;
         if ($wsdl or $options) {
+            
+            $this->clientOptions = $options;
             
             if(isset($options['stream_context']) AND is_array($options['stream_context'])) {
                 $this->streamContext = $options['stream_context'];
@@ -84,7 +97,10 @@ class Client extends \SoapClient
             
             $context = array_merge(
                 $this->streamContext, 
-                ['http' => ['header' => 'xapp: ' . Environment::getAppId() . "\r\n" . 'soapaction: "' . $this->uri  . $function_name . '"' . "\r\n"]]
+                ['http' => [
+                    'header' => 'xapp: ' . Environment::getAppId() . "\r\n" . 
+                                'soapaction: "' . $this->uri  . $function_name . '"' . "\r\n"   
+                ]]
             );
             
             stream_context_set_option($this->headerStream, $context);
@@ -100,6 +116,25 @@ class Client extends \SoapClient
         } else {
             
             return parent::__call($function_name, $arguments);
+            
+        }
+        
+    }
+    
+    public function __doRequest($request, $location, $action, $version)
+    {
+        
+        if($this->useCurl) {
+            
+            $transport = new CurlTransport($this->clientOptions);
+            
+            print_r($transport->__doRequest($request, $location, $action, $version));
+            
+            die();
+            
+        } else {
+            
+            return parent::__doRequest($request, $location, $action, $version);
             
         }
         
