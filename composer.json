@@ -21,6 +21,9 @@
 	"require-dev" : {
 		"codeception/codeception" : "^1.0"
 	},
+	"suggest": {
+        "pixi/saxparser": "Allows you to use the CurlTransport with stream parsing of resultset"
+    },
 	"autoload" : {
 		"psr-0" : {
 			"Pixi" : "src/"
