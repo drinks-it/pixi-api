@@ -1,21 +1,24 @@
 <?php
 
-namespace Pixi\API\Soap;
+namespace Pixi\API\Soap\Result;
+
+use Pixi\API\Soap\Result\ResultInterface;
 
 /**
  * This object contains a result from pixi* API
  *
  * @author Florian Seidl
  */
-class Result implements ResultInterface
+class DefaultResult implements ResultInterface
 {
+    
     private $_result = null;
 
-    function __construct($result)
+    public function setResultSet($result)
     {
         $this->_result = $result;
     }
-
+    
     /**
      * GetResultset
      *
@@ -228,4 +231,7 @@ class Result implements ResultInterface
     	else
     		return array();
     }
+
+
+
 }

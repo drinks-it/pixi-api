@@ -39,7 +39,7 @@ class Client extends \SoapClient
     /**
      * @var string|object Object name for the Result object
      */
-    public $resultObject = '\Pixi\API\Soap\Result';
+    public $resultObject = '\Pixi\API\Soap\Result\DefaultResult';
     
     /**
      * @var string|object Name of the transport object or object
@@ -64,7 +64,7 @@ class Client extends \SoapClient
      */
     public function __construct($wsdl = null, $options = null)
     {
-        $options['trace'] = true;
+
         if ($wsdl or $options) {
             
             $this->clientOptions = $options;
@@ -112,7 +112,13 @@ class Client extends \SoapClient
             
             $this->content = $this->getResultObject();
             
-            $this->content->setResult(parent::__call($function_name, $vars));
+            try {
+                $result = parent::__call($function_name, $vars);
+            } catch(\Exception $e) {
+                
+            }
+            
+            $this->content->setResultSet($result);
             
             $this->content->setIgnoreErrors($this->ignore_errors);
             
@@ -126,14 +132,16 @@ class Client extends \SoapClient
         
     }
     
-    public function __doRequest($request, $location, $action, $version)
+    public function __doRequest($request, $location, $action, $version, $oneWay = 0)
     {
         
         if($this->transportObject) {
             
-            $transport = new CurlTransport($this->clientOptions);
+            $transport = $this->getTransportObject();
+            $transport->setOptions($this->clientOptions);
+            $this->content->setResultSet($transport->__doRequest($request, $location, $action, $version));
             
-            return $transport->__doRequest($request, $location, $action, $version);
+            return;
                         
         } else {
             
@@ -215,6 +223,7 @@ class Client extends \SoapClient
         }
         
         return $this->resultObject;
+        
     }
 
     public function setResultObject($resultObject)
@@ -233,9 +242,7 @@ class Client extends \SoapClient
     {
         
         if(is_string($this->transportObject)) {
-        
             $this->transportObject = new $this->transportObject;
-            
         }
          
         return $this->transportObject;

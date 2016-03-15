@@ -1,13 +1,13 @@
 <?php
 
-namespace Pixi\API\Soap;
+namespace Pixi\API\Soap\Result;
 
 interface ResultInterface
 {
     
-    public function __construct($result);
-    
     public function getResultSet();
+    
+    public function setResultSet($result);
     
     public function  setIgnoreErrors($bool);
     

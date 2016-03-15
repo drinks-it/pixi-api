@@ -2,6 +2,7 @@
 
 namespace Pixi\API\Soap\Transport;
 use Pixi\AppsFactory\Environment;
+use Pixi\Xml\Parser\Sax;
 
 class CurlTransport implements TransportInterface
 {
@@ -37,9 +38,9 @@ class CurlTransport implements TransportInterface
     public function __doRequest($request, $location = NULL, $action = NULL, $version = NULL)
     {
         
-        $z = new Sax();
-
-        $z->dispatcher->addSubscriber($listener);
+        $parser = new Sax();
+        $listener = new CurlParserListener();
+        $parser->dispatcher->addSubscriber($listener);
         
         $this->createClient();
         
@@ -56,15 +57,15 @@ class CurlTransport implements TransportInterface
             ]
         );
                 
-        curl_setopt($this->ch, CURLOPT_WRITEFUNCTION, function($a, $b) use ($z) {
-            $z->parse($b);            
+        curl_setopt($this->ch, CURLOPT_WRITEFUNCTION, function($a, $b) use ($parser) {
+            $parser->parse($b);            
             return strlen($b);
         });
         
-        $z->__destruct();
-        
         curl_exec($this->ch);
 
+        $parser->__destruct();
+        
         return $listener->getResultset();
         
     }
