@@ -1,33 +1,30 @@
 {
-    "name" : "pixi/api",
-    "description" : "Soap client needed to connection to pixi* SOAP api",
-    "license" : "MIT",
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "http://apps-live.pixi.eu/satis"
-        }
-    ],
-    "authors" : [{
-            "name" : "Silvester Maraz",
-            "email" : "smaraz@pixi.eu"
-        }, {
-            "name" : "Korbinian Ober",
-            "email" : "ko@pixi.eu"
-        }, {
-            "name" : "Florian Seidl",
-            "email" : "fs@pixi.eu"
-        }
-    ],
-    "require" : {
-        "pixi/factory" : "0.0.*"
-    },
-    "require-dev" : {
-        "codeception/codeception" : "1.*"
-    },
-    "autoload" : {
-        "psr-0" : {
-            "Pixi" : "src/"
-        }
-    }
+	"name" : "pixi/api",
+	"description" : "Soap client needed to connection to pixi* SOAP api",
+	"license" : "MIT",
+	"repositories" : [{
+			"type" : "composer",
+			"url" : "https://apps-live.pixi.eu/satis"
+		}
+	],
+	"authors" : [{
+			"name" : "Silvester Maraz",
+			"email" : "smaraz@pixi.eu"
+		}, {
+			"name" : "Florian Seidl",
+			"email" : "fs@pixi.eu"
+		}
+	],
+	"require" : {
+		"pixi/factory" : "^0.0",
+		"pixi/saxparser" : "^1.0.x@dev"
+	},
+	"require-dev" : {
+		"codeception/codeception" : "^1.0"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"Pixi" : "src/"
+		}
+	}
 }

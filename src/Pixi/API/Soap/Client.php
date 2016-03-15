@@ -4,6 +4,7 @@ namespace Pixi\API\Soap;
 use Pixi\API\Soap\Result;
 use Pixi\API\Soap\Exception\PixiApiException;
 use Pixi\AppsFactory\Environment;
+use Pixi\API\Soap\Transport\CurlTransport;
 
 class Client extends \SoapClient
 {
@@ -36,10 +37,25 @@ class Client extends \SoapClient
     public $streamContext = array();
     
     /**
-     * @var string Object name for the Result object
+     * @var string|object Object name for the Result object
      */
     public $resultObject = '\Pixi\API\Soap\Result';
-
+    
+    /**
+     * @var string|object Name of the transport object or object
+     */
+    public $transportObject = false;
+    
+    /**
+     * @var array Options which are injected in the constructor.
+     */
+    public $clientOptions = array();
+    
+    /**
+     * @var bool If true, client will use curl for transport
+     */
+    public $useCurl = true;
+    
     /**
      * The constructor is overwritten, so it can be initalized without any parameters
      *
@@ -48,8 +64,10 @@ class Client extends \SoapClient
      */
     public function __construct($wsdl = null, $options = null)
     {
-        
+        $options['trace'] = true;
         if ($wsdl or $options) {
+            
+            $this->clientOptions = $options;
             
             if(isset($options['stream_context']) AND is_array($options['stream_context'])) {
                 $this->streamContext = $options['stream_context'];
@@ -84,14 +102,17 @@ class Client extends \SoapClient
             
             $context = array_merge(
                 $this->streamContext, 
-                ['http' => ['header' => 'xapp: ' . Environment::getAppId() . "\r\n" . 'soapaction: "' . $this->uri  . $function_name . '"' . "\r\n"]]
+                ['http' => [
+                    'header' => 'xapp: ' . Environment::getAppId() . "\r\n" . 
+                                'soapaction: "' . $this->uri  . $function_name . '"' . "\r\n"   
+                ]]
             );
             
             stream_context_set_option($this->headerStream, $context);
             
-            $resultObject = $this->resultObject;
+            $this->content = $this->getResultObject();
             
-            $this->content = new $resultObject(parent::__call($function_name, $vars));
+            $this->content->setResult(parent::__call($function_name, $vars));
             
             $this->content->setIgnoreErrors($this->ignore_errors);
             
@@ -100,6 +121,23 @@ class Client extends \SoapClient
         } else {
             
             return parent::__call($function_name, $arguments);
+            
+        }
+        
+    }
+    
+    public function __doRequest($request, $location, $action, $version)
+    {
+        
+        if($this->transportObject) {
+            
+            $transport = new CurlTransport($this->clientOptions);
+            
+            return $transport->__doRequest($request, $location, $action, $version);
+                        
+        } else {
+            
+            return parent::__doRequest($request, $location, $action, $version);
             
         }
         
@@ -171,6 +209,11 @@ class Client extends \SoapClient
 
     public function getResultObject()
     {
+        
+        if(is_string($this->resultObject)) {
+            $this->resultObject = new $this->resultObject;
+        }
+        
         return $this->resultObject;
     }
 
@@ -178,6 +221,25 @@ class Client extends \SoapClient
     {
         $this->resultObject = $resultObject;
         return $this;
+    }
+    
+    public function setTransportObject($object)
+    {
+        $this->transportObject = $object;
+        return $this;
+    }
+    
+    public function getTransportObject()
+    {
+        
+        if(is_string($this->transportObject)) {
+        
+            $this->transportObject = new $this->transportObject;
+            
+        }
+         
+        return $this->transportObject;
+        
     }
  
 }
