@@ -112,6 +112,8 @@ class Client extends \SoapClient
             
             $this->content = $this->getResultObject();
             
+            $result = NULL;
+            
             try {
                 $result = parent::__call($function_name, $vars);
             } catch(\Exception $e) {
