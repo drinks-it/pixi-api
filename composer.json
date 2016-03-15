@@ -16,8 +16,7 @@
 		}
 	],
 	"require" : {
-		"pixi/factory" : "^0.0",
-		"pixi/saxparser" : "1.0.x@dev"
+		"pixi/factory" : "^0.0"
 	},
 	"require-dev" : {
 		"codeception/codeception" : "^1.0"
