@@ -55,6 +55,11 @@ class Client extends \SoapClient
      * @var bool If true, client will use curl for transport
      */
     public $useCurl = true;
+
+    /**
+     * @var \Exception Last exception thrown by soap client
+     */
+    public $lastException = false;
     
     /**
      * The constructor is overwritten, so it can be initalized without any parameters
@@ -117,7 +122,7 @@ class Client extends \SoapClient
             try {
                 $result = parent::__call($function_name, $vars);
             } catch(\Exception $e) {
-                
+                $this->lastException = $e;
             }
             
             $this->content->setResultSet($result);
