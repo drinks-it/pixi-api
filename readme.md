@@ -10,7 +10,7 @@ This library is based on the syntax that was used in the Apps-Framework on pixi*
 -----
 To include the library into your project you can download it or include it using `composer require`
 
-To requie it using composer you need to put the following content into your composer.json file.
+To requie it using composer you need to put the following content into your composer.json file and run composer install.
 ```
 :::js
 
