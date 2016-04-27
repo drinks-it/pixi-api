@@ -21,7 +21,7 @@ To requie it using composer you need to put the following content into your comp
     }
 ],
 "require" : {
-    "pixi/factory" : "~2.0"
+    "pixi/api" : "~2.0"
 },
 
 ```
