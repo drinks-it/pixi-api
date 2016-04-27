@@ -17,7 +17,7 @@ To requie it using composer you need to put the following content into your comp
 "repositories": [
     {
         "type": "composer",
-        "url": "http://apps-live.pixi.eu/satis"
+        "url": "https://apps-live.pixi.eu/satis"
     }
 ],
 "require" : {
