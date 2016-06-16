@@ -1,13 +1,31 @@
 # Lib: Soap
 
 -----
-The Soap library is based on the native Soap client that is available in PHP version 5.0 an upper. This library is based on the syntax that was used in the Apps-Framework on pixi* but is now decoupled and can be used in any other project as well.
+The Soap library is based on the native Soap client that is available in PHP version 5.0 an upper.
+This library is based on the syntax that was used in the Apps-Framework on pixi* but is now decoupled and can be used in any other project as well.
+
 
 ## Quick Start
 
 -----
+To include the library into your project you can download it or include it using `composer require`
 
-To run the example application, you must first install the development dependencies via composer. From the root `Lib - Soap`, run:
+To requie it using composer you need to put the following content into your composer.json file and run composer install.
+```
+:::js
+
+"repositories": [
+    {
+        "type": "composer",
+        "url": "https://apps-live.pixi.eu/satis"
+    }
+],
+"require" : {
+    "pixi/api" : "~1.0"
+},
+
+```
+If you download the repository you need to, install the development dependencies via composer. From the root `Lib - Soap`, run:
 
 	$ php composer install
 

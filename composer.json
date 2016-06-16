@@ -8,16 +8,11 @@
             "url": "http://apps-live.pixi.eu/satis"
         }
     ],
-    "authors" : [{
-            "name" : "Silvester Maraz",
-            "email" : "smaraz@pixi.eu"
-        }, {
-            "name" : "Korbinian Ober",
-            "email" : "ko@pixi.eu"
-        }, {
-            "name" : "Florian Seidl",
-            "email" : "fs@pixi.eu"
-        }
+    "authors" : [
+        {"name": "Gregor Walter", "email": "gw@pixi.eu"},
+        {"name": "Marko Antolović", "email": "ma@pixi.eu"},
+        {"name": "Florian Seidl", "email": "fs@pixi.eu"},
+        {"name": "Silvester Maraž", "email": "smaraz@pixi.eu"}
     ],
     "require" : {
         "pixi/factory" : "0.0.*"
