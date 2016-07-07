@@ -1,9 +1,9 @@
 <?php
-use Pixi\API\Soap\ResultInterface;
+require_once 'vendor/autoload.php';
+
+use Pixi\API\Soap\Result\ResultInterface;
 
 $_GET['XDEBUG_PROFILE'] = true;
-
-require_once 'vendor/autoload.php';
 
 if (file_exists('config.php')) {
     require_once 'config.php';
@@ -48,17 +48,6 @@ class ReturnFake implements ResultInterface
         return $this->rs;
     }
 
-    /**
-     *
-     * {@inheritDoc}
-     *
-     * @see \Pixi\API\Soap\ResultInterface::__construct()
-     */
-    public function __construct($result)
-    {
-        // TODO: Auto-generated method stub
-        $this->rs = $result;
-    }
 
     /**
      *
@@ -70,7 +59,11 @@ class ReturnFake implements ResultInterface
     {
         // TODO: Auto-generated method stub
     }
-    
+
+    public function setResultSet($result)
+    {
+        $this->rs = $result;
+    }
 }
 
 try {
