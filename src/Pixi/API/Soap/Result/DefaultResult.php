@@ -14,6 +14,13 @@ class DefaultResult implements ResultInterface
     
     private $_result = null;
 
+    /**
+     * Whether result faults should be ignored or not
+     * @var bool
+     */
+    private $ignore_errors = false;
+
+
     public function setResultSet($result)
     {
         $this->_result = $result;
@@ -201,12 +208,7 @@ class DefaultResult implements ResultInterface
         return is_array($this->_result);
     }
 
-    /**
-     * Whether result faults should be ignored or not
-     * @var bool
-     */
-    private $ignore_errors = false;
-    
+
     /**
      * Sets whether to ignore result faults or not.
      * @param string $b		true if SOAP faults should be ignored, false if not
