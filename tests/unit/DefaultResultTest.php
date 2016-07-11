@@ -24,38 +24,54 @@ class DefaultResultTest extends \PHPUnit_Framework_TestCase
             'Country'  => 'D',
         ),
         array(
-            'ShopID'      => 'STG',
-            'ShopName'    => 'Hier Webadresse des Shops eintragen!',
-            'Address'     => 'Hier Strasse und Hausnummer eintragen!',
-            'City'        => 'Hier Ort eintragen!',
-            'State'       => 'GER',
-            'ZIP'         => 'PLZ',
-            'Country'     => 'D',
-            'Contact'     => 'Hier Ansprechpartner eintragen!',
-            'Phone'       => 'Hier Telefonnummer von Ansprechpartner eintragen!',
-            'Fax'         => 'Hier Faxnummer eintragen',
-            'ShopCompany' => 'Firma',
-            'eMail'       => 'installation@pixi.eu',
-            'BIC'         => 'UstID und Steuernummer',
-            'IBAN'        => 'IBAN und SWIFT',
-            'KontoBLZ'    => 'Kontonummer und BLZ',
-            'BankName'    => 'Bankname',
-        ),
-        array(
             'ShopID'   => 'URO',
             'ShopName' => 'URO',
             'Country'  => 'D',
         ),
     );
 
+    private $expectedResultSetForMultipleResultSets = array(
+        0 =>
+            array(
+                0 =>
+                    array(
+                        0 =>
+                            array(
+                                'ShopID'   => 'FLO',
+                                'ShopName' => 'FLO',
+                                'Country'  => 'D',
+                            ),
+                        1 =>
+                            array(
+                                'ShopID'   => 'URO',
+                                'ShopName' => 'URO',
+                                'Country'  => 'D',
+                            ),
+                    ),
+            ),
+        1 =>
+            array(
+                0 =>
+                    array(
+                        0 =>
+                            array(
+                                'ShopID'   => 'FLO',
+                                'ShopName' => 'URO',
+                                'Country'  => 'D',
+                            ),
+                        1 =>
+                            array(
+                                'ShopID'   => 'FLO',
+                                'ShopName' => 'URO',
+                                'Country'  => 'D',
+                            ),
+                    ),
+            ),
+    );
+
     protected function setUp()
     {
-        $soapResult = new SoapResult();
-        $soapResult->SqlRowSet = new SqlRowSet();
-        $soapResult->SqlRowSet->diffgram = new diffgram();
-        $soapResult->SqlRowSet->diffgram->SqlRowSet1 = new SqlRowSet1();
-        $soapResult->SqlRowSet->diffgram->SqlRowSet1->row = new row();
-
+        $soapResult = require __DIR__ . "/../_data/SingleSoapResultSetForMultipleRows.php";
         $this->soapResult = $soapResult;
     }
 
@@ -64,84 +80,126 @@ class DefaultResultTest extends \PHPUnit_Framework_TestCase
         $this->soapResult = null;
     }
 
-    public function testGetResultSetSingleRow()
+    public function testGetResultSetForSingleRow()
     {
-        $testData = require __DIR__."/../_data/ResultSet.php";
-
-        $expectedResultSingle = array(
-            array(
-                'ShopID' => 'NEW',
-                'ShopName' => 'NEW Testshop',
-                'Address' => 'Große-Fleischergasse',
-                'City' => 'Leipzig',
-                'ZIP' => '1337',
-                'Country' => 'D'
-            )
+        $soapResult = require __DIR__ . "/../_data/SingleSoapResultSetForSingleRow.php";
+        $expectedResult = array(
+            0 =>
+                array(
+                    'ShopID'   => 'FLO',
+                    'ShopName' => 'FLO',
+                    'Country'  => 'D',
+                ),
         );
 
-        $this->soapResult->SqlRowSet->diffgram->SqlRowSet1->row = $testData['RowSetSingleRow'];
+        $defaultResult = new DefaultResult();
+        $defaultResult->setResultSet($soapResult);
 
+        $this->assertSame($expectedResult, $defaultResult->getResultSet());
+    }
+
+    public function testGetResultSetWithMultipleRows()
+    {
         $defaultResult = new DefaultResult();
         $defaultResult->setResultSet($this->soapResult);
 
-        $this->assertSame($expectedResultSingle, $defaultResult->getResultSet());
+        $this->assertSame($this->expectedResult, $defaultResult->getResultSet());
     }
 
-    public function testGetResultsetMultipleRows()
+
+    public function testGetResultForEmptyResult()
     {
+        $soapResult = new \stdClass();
+        $soapResult->SqlRowSet = new \stdClass();
+        $soapResult->SqlResultCode = 0;
 
-        $testData = require __DIR__."/../_data/ResultSet.php";
+        $defaultResult = new DefaultResult();
+        $defaultResult->setResultSet($soapResult);
 
-        $expectedResultMultiple = array(
-            array(
-                'ShopID' => 'ABC',
-                'ShopName' => 'ABC Testshop',
-                'Address' => 'Walter-Gropius-Str. 15',
-                'City' => 'Muenchen',
-                'ZIP' => '80807',
-                'Country' => 'D'
-            ),
-            array(
-                'ShopID' => 'DEF',
-                'ShopName' => 'DEF new Testshop',
-                'Address' => 'Haupstraße 15',
-                'City' => 'München',
-                'ZIP' => '81245',
-                'Country' => 'D'
-            )
-        );
+        $this->assertSame(array(), $defaultResult->getResultSet());
+    }
 
-        $this->soapResult->SqlRowSet->diffgram->SqlRowSet1->row = $testData['RowSetMultipleRows'];
+    public function testGetResultWhenResultIsFunctionCall()
+    {
+        $defaultResult = new DefaultResult();
+        $defaultResult->setResultSet('function');
 
+        $this->assertSame('function', $defaultResult->getResultSet());
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testGetResultWhenThereIsError()
+    {
+        $defaultResult = new DefaultResult();
+        $defaultResult->setResultSet(array());
+
+        $defaultResult->getResultSet();
+    }
+
+    public function testGetResultCode()
+    {
         $defaultResult = new DefaultResult();
         $defaultResult->setResultSet($this->soapResult);
 
-        $this->assertSame($expectedResultMultiple, $defaultResult->getResultSet());
+        $this->assertSame(0, $defaultResult->getResultCode());
     }
-}
 
-class SoapResult
-{
-    public $SqlRowSet;
-    public $SqlResultCode = 0;
-}
+    public function testGetResultMessage()
+    {
+        $soapResult = require __DIR__ . "/../_data/SoapErrorResult.php";
 
-class SqlRowSet
-{
-    public $diffgram;
-}
+        $defaultResult = new DefaultResult();
+        $defaultResult->setResultSet($soapResult);
 
-class diffgram
-{
-    public $SqlRowSet1;
-}
+        $this->assertSame(array($soapResult->SqlMessage), $defaultResult->getMessages());
+    }
 
-class SqlRowSet1
-{
-    public $row;
-}
+    public function testGetNoResultMessage()
+    {
 
-class row
-{
-    public $array;
+        $defaultResult = new DefaultResult();
+        $defaultResult->setResultSet(array());
+
+        $this->assertSame(array(), $defaultResult->getMessages());
+    }
+
+    public function testGetResultForMultipleResultSets()
+    {
+        $soapResult = require __DIR__ . "/../_data/MultipleSoapResultSets.php";
+
+
+        $defaultResult = new DefaultResult();
+        $defaultResult->setResultSet($soapResult);
+
+        $this->assertSame($this->expectedResultSetForMultipleResultSets, $defaultResult->getResultSet());
+    }
+
+    public function testHasMultipleResultSets()
+    {
+        $soapResult = require __DIR__ . "/../_data/MultipleSoapResultSets.php";
+
+        $defaultResult = new DefaultResult();
+        $defaultResult->setResultSet($soapResult);
+
+        $this->assertSame(true, $defaultResult->hasMultipleResultsets());
+    }
+
+    public function testDoesNotHaveMultipleResultSets()
+    {
+        $defaultResult = new DefaultResult();
+        $defaultResult->setResultSet(array());
+
+        $this->assertSame(false, $defaultResult->hasMultipleResultsets());
+    }
+
+    public function testGetValue()
+    {
+        $defaultResult = new DefaultResult();
+        $defaultResult->setResultSet(function () {
+        });
+
+        $this->assertInstanceOf('Closure', $defaultResult->getValue());
+    }
 }

@@ -161,7 +161,7 @@ class DefaultResult implements ResultInterface
      */
     function getResultCode()
     {
-        return $this->isResultSet() ? $this->_result['SqlResultCode'] : null;
+        return $this->isResultSet() ? $this->_result->SqlResultCode : null;
     }
 
     /**
@@ -181,7 +181,7 @@ class DefaultResult implements ResultInterface
      */
     function getValue()
     {
-        return $this->isResultSet() ? null : $this->_result;
+        return is_callable($this->_result) ? $this->_result : null;
     }
 
     /**
@@ -191,7 +191,7 @@ class DefaultResult implements ResultInterface
      */
     function hasMultipleResultSets()
     {
-        if($this->isResultSet() && !empty($this->_result['SqlRowSet'][0])) {
+        if($this->isResultSet() && !empty($this->_result->SqlRowSet[0])) {
             return true;
         }
 
@@ -205,7 +205,7 @@ class DefaultResult implements ResultInterface
      */
     function isResultSet()
     {
-        return is_array($this->_result);
+        return is_object($this->_result);
     }
 
 
@@ -229,7 +229,7 @@ class DefaultResult implements ResultInterface
      */
     public function getMessages() {
     	if ($this->hasMessages())
-    		return isset($this->_result->SqlMessage[0]) ? $this->_result->SqlMessage : array($this->_result->SqlMessage);
+    		return is_array($this->_result->SqlMessage) ? $this->_result->SqlMessage : array($this->_result->SqlMessage);
     	else
     		return array();
     }
