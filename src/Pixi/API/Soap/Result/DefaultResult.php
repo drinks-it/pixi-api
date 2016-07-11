@@ -27,7 +27,7 @@ class DefaultResult implements ResultInterface
     }
     
     /**
-     * GetResultset
+     * GetResultSet
      *
      * Returns a result set from the result
      *
@@ -161,7 +161,7 @@ class DefaultResult implements ResultInterface
      */
     function getResultCode()
     {
-        return $this->isResultset() ? $this->_result['SqlResultCode'] : null;
+        return $this->isResultSet() ? $this->_result['SqlResultCode'] : null;
     }
 
     /**
@@ -181,7 +181,7 @@ class DefaultResult implements ResultInterface
      */
     function getValue()
     {
-        return $this->isResultset() ? null : $this->_result;
+        return $this->isResultSet() ? null : $this->_result;
     }
 
     /**
@@ -189,9 +189,9 @@ class DefaultResult implements ResultInterface
      *
      * @return bool
      */
-    function hasMultipleResultsets()
+    function hasMultipleResultSets()
     {
-        if($this->isResultset() && !empty($this->_result['SqlRowSet'][0])) {
+        if($this->isResultSet() && !empty($this->_result['SqlRowSet'][0])) {
             return true;
         }
 
@@ -203,7 +203,7 @@ class DefaultResult implements ResultInterface
      *
      * @return bool
      */
-    function isResultset()
+    function isResultSet()
     {
         return is_array($this->_result);
     }
