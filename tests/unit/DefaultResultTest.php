@@ -80,7 +80,7 @@ class DefaultResultTest extends \PHPUnit_Framework_TestCase
         $this->soapResult = null;
     }
 
-    public function testGetResultSetForSingleRow()
+    public function testGetResultForSingleResultSetWithOneRow()
     {
         $soapResult = require __DIR__ . "/../_data/SingleSoapResultSetForSingleRow.php";
         $expectedResult = array(
@@ -98,7 +98,7 @@ class DefaultResultTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedResult, $defaultResult->getResultSet());
     }
 
-    public function testGetResultSetWithMultipleRows()
+    public function testGetResultForSingleResultSetWithMultipleRows()
     {
         $defaultResult = new DefaultResult();
         $defaultResult->setResultSet($this->soapResult);
@@ -107,7 +107,20 @@ class DefaultResultTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testGetResultForEmptyResult()
+    public function testGetResultForSingleResultSetWithEmptyResult()
+    {
+        $soapResult = new \stdClass();
+        $soapResult->SqlRowSet = new \stdClass();
+        $soapResult->SqlRowSet->diffgram = '';
+        $soapResult->SqlResultCode = 0;
+
+        $defaultResult = new DefaultResult();
+        $defaultResult->setResultSet($soapResult);
+
+        $this->assertSame(array(), $defaultResult->getResultSet());
+    }
+
+    public function testGetResultForNoResultSet()
     {
         $soapResult = new \stdClass();
         $soapResult->SqlRowSet = new \stdClass();
@@ -156,7 +169,7 @@ class DefaultResultTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array($soapResult->SqlMessage), $defaultResult->getMessages());
     }
 
-    public function testGetNoResultMessage()
+    public function testGetResultMessageWhereThereIsNoMessage()
     {
 
         $defaultResult = new DefaultResult();
