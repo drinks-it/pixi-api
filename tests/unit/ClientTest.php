@@ -11,34 +11,52 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->client = new Client();
     }
 
     protected function tearDown()
     {
-        $this->client = null;
     }
 
     public function testConstruct()
     {
-        $client = new Client(null, array(
+        $options = array(
             "trace" => 1,
-    		"login" => 'username',
-    		"password" => 'password',
-    		"location" => 'uri',
-    		"uri" => 'uri',
-    	    'user_agent' => 'pixi API Client 0.1',
-    	    'soap_version' => SOAP_1_2
-        ));
+            "login" => 'username',
+            "password" => 'password',
+            "location" => 'uri',
+            "uri" => 'uri',
+            'user_agent' => 'pixi API Client 0.1',
+            'soap_version' => SOAP_1_2,
+            'stream_context' => [
+                'ssl' => [
+                    'allow_self_signed' => true,
+                    'verify_peer'       => false,
+                    'verify_peer_name'  => false,
+                ],
+            ],
+        );
 
-        $this->assertSame('username', $client->_login);
+        $client = new Client(null, $options);
+
+        $this->assertSame($options, $client->clientOptions);
     }
 
     public function testSetPixiOptions()
     {
-        $options = new Options('string', 'string', 'string');
-        $options->setOptions(
-            array(
+
+        $expected = array(
+            'user_agent' => 'pixi API Client 0.1',
+            'soap_version'  => SOAP_1_2,
+            "login" => 'username',
+            "password" => 'password',
+            "uri" => 'uri',
+            "location" => 'uri',
+            "trace" => 1,
+        );
+
+        $options = new Options('test', 'test', 'test');
+
+        $options->setOptions(array(
                 "trace" => 1,
         		"login" => 'username',
         		"password" => 'password',
@@ -46,11 +64,11 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         		"uri" => 'uri',
         	    'user_agent' => 'pixi API Client 0.1',
         	    'soap_version' => SOAP_1_2
-            )
-        );
+        ));
 
-        $this->client->setPixiOptions($options);
-        $this->assertSame('username', $this->client->_login);
-        $this->assertSame(1, $this->client->trace);
+        $client = new Client();
+        $client->setPixiOptions($options);
+
+        $this->assertSame($expected, $client->clientOptions);
     }
 }
