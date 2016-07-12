@@ -31,42 +31,34 @@ class DefaultResultTest extends \PHPUnit_Framework_TestCase
     );
 
     private $expectedResultSetForMultipleResultSets = array(
-        0 =>
+        array(
             array(
-                0 =>
-                    array(
-                        0 =>
-                            array(
-                                'ShopID'   => 'FLO',
-                                'ShopName' => 'FLO',
-                                'Country'  => 'D',
-                            ),
-                        1 =>
-                            array(
-                                'ShopID'   => 'URO',
-                                'ShopName' => 'URO',
-                                'Country'  => 'D',
-                            ),
-                    ),
+                array(
+                    'ShopID'   => 'FLO',
+                    'ShopName' => 'FLO',
+                    'Country'  => 'D',
+                ),
+                array(
+                    'ShopID'   => 'URO',
+                    'ShopName' => 'URO',
+                    'Country'  => 'D',
+                ),
             ),
-        1 =>
+        ),
+        array(
             array(
-                0 =>
-                    array(
-                        0 =>
-                            array(
-                                'ShopID'   => 'FLO',
-                                'ShopName' => 'URO',
-                                'Country'  => 'D',
-                            ),
-                        1 =>
-                            array(
-                                'ShopID'   => 'FLO',
-                                'ShopName' => 'URO',
-                                'Country'  => 'D',
-                            ),
-                    ),
+                array(
+                    'ShopID'   => 'FLO',
+                    'ShopName' => 'URO',
+                    'Country'  => 'D',
+                ),
+                array(
+                    'ShopID'   => 'FLO',
+                    'ShopName' => 'URO',
+                    'Country'  => 'D',
+                ),
             ),
+        ),
     );
 
     protected function setUp()
@@ -246,5 +238,13 @@ class DefaultResultTest extends \PHPUnit_Framework_TestCase
         });
 
         $this->assertInstanceOf('Closure', $defaultResult->getValue());
+    }
+
+    public function testGetResult()
+    {
+        $defaultResult = new DefaultResult();
+        $defaultResult->setResultSet($this->soapResult);
+
+        $this->assertSame($this->soapResult, $defaultResult->getResult());
     }
 }
