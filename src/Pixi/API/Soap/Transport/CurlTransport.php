@@ -3,6 +3,7 @@
 namespace Pixi\API\Soap\Transport;
 use Pixi\AppsFactory\Environment;
 use Pixi\Xml\Parser\Sax;
+use Pixi\API\Soap\Exception;
 
 class CurlTransport implements TransportInterface
 {
@@ -64,8 +65,15 @@ class CurlTransport implements TransportInterface
         
         curl_exec($this->ch);
 
+        if (curl_error($this->ch)) {
+            throw new PixiApiException("Curl Error", curl_error($this->ch));
+        }
+
+        //We do not close the curl handle because of the performance increase when making multiple api requests.
+
+        //we call xml_parser_free
         $parser->__destruct();
-        
+
         return $listener->getResultset();
         
     }
