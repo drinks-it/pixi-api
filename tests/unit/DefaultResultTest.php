@@ -120,6 +120,38 @@ class DefaultResultTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array(), $defaultResult->getResultSet());
     }
 
+    public function testGetResultWithOutputVariables()
+    {
+        $soapResult = array();
+        $soapResult['pixiCheckPixiUserLoginResult'] = new \stdClass();
+        $soapResult['pixiCheckPixiUserLoginResult']->SqlRowSet = new \stdClass();
+        $soapResult['pixiCheckPixiUserLoginResult']->SqlResultCode = 0;
+        $soapResult['pixiCheckPixiUserLoginResult']->SqlRowSet->diffgram = new \stdClass();
+        $soapResult['pixiCheckPixiUserLoginResult']->SqlRowSet->diffgram->SqlRowSet1 = new \stdClass();
+
+        $soapResult['pixiCheckPixiUserLoginResult']->SqlRowSet->diffgram->SqlRowSet1->row = new \stdClass();
+        $soapResult['pixiCheckPixiUserLoginResult']->SqlRowSet->diffgram->SqlRowSet1->row->ShopID = "FLO";
+        $soapResult['pixiCheckPixiUserLoginResult']->SqlRowSet->diffgram->SqlRowSet1->row->ShopName = "FLO";
+        $soapResult['pixiCheckPixiUserLoginResult']->SqlRowSet->diffgram->SqlRowSet1->row->Country = "D";
+
+        $soapResult['ValidUser'] = '1';
+        $soapResult['UserEmail'] = '';
+        $soapResult['UserRealName'] = 'Master';
+
+        $expectedResult = array(
+            array(
+                'ShopID'   => 'FLO',
+                'ShopName' => 'FLO',
+                'Country'  => 'D',
+            ),
+        );
+
+        $defaultResult = new DefaultResult();
+        $defaultResult->setResultSet($soapResult);
+
+        $this->assertSame($expectedResult, $defaultResult->getResultSet());
+    }
+
     public function testGetResultForNoResultSet()
     {
         $soapResult = new \stdClass();
