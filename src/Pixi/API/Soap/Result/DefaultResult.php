@@ -66,8 +66,9 @@ class DefaultResult implements ResultInterface
         }
 
         if (!$this->ignore_errors) {
-            throw new \Exception('There was an error in the incomming resultset.' . "\nPayload: " . print_r($result,
-                    true));
+            throw new \Exception(
+                'There was an error in the incomming resultset.' . "\nPayload: " . print_r($result, true)
+            );
         }
 
     }
