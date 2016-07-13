@@ -3,7 +3,7 @@
 namespace Pixi\API\Soap\Transport;
 use Pixi\AppsFactory\Environment;
 use Pixi\Xml\Parser\Sax;
-use Pixi\API\Soap\Exception;
+use Pixi\API\Soap\Result\ResultException;
 
 class CurlTransport implements TransportInterface
 {
@@ -41,7 +41,9 @@ class CurlTransport implements TransportInterface
         
         $parser = new Sax();
         $listener = new CurlParserListener();
+        $errorListener = new CurlParserErrorListener();
         $parser->dispatcher->addSubscriber($listener);
+        $parser->dispatcher->addSubscriber($errorListener);
         
         $this->createClient();
         
@@ -57,24 +59,26 @@ class CurlTransport implements TransportInterface
                 'Content-type: text/xml'
             ]
         );
-                
-        curl_setopt($this->ch, CURLOPT_WRITEFUNCTION, function($a, $b) use ($parser) {
-            $parser->parse($b);            
+        $xml = '';
+        
+        curl_setopt($this->ch, CURLOPT_WRITEFUNCTION, function($a, $b) use ($parser, &$xml) {
+            
+            $parser->parse($b);
             return strlen($b);
         });
         
         curl_exec($this->ch);
-
+        
         if (curl_error($this->ch)) {
-            throw new PixiApiException("Curl Error", curl_error($this->ch));
+            throw new TransportException(curl_error($this->ch), curl_errno($this->ch), $this->ch);
         }
 
         //We do not close the curl handle because of the performance increase when making multiple api requests.
-
+    
         //we call xml_parser_free
         $parser->__destruct();
 
-        return $listener->getResultset();
+        return ['resultSet' => $listener->getResultset(), 'error' => $errorListener->getResultSet()];
         
     }
 

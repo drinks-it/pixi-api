@@ -19,11 +19,9 @@
 		"pixi/factory" : "^0.0"
 	},
 	"require-dev" : {
-		"codeception/codeception" : "~2.2.0"
+		"codeception/codeception" : "~2.2.0",
+		"pixi/saxparser" : "~1.0"
 	},
-	"suggest": {
-        "pixi/saxparser": "Allows you to use the CurlTransport with stream parsing of resultset"
-    },
 	"autoload" : {
 		"psr-0" : {
 			"Pixi" : "src/"

@@ -16,13 +16,6 @@ class Client extends \SoapClient
     public $content;
     
     /**
-     * Whether result faults should be ignored or not
-     *
-     * @var bool
-     */
-    private $ignore_errors = false;
-    
-    /**
      * Http stream context for the soap client
      * 
      * @var string
@@ -119,15 +112,9 @@ class Client extends \SoapClient
             
             $result = NULL;
             
-            try {
-                $result = parent::__call($function_name, $vars);
-            } catch(\Exception $e) {
-                $this->lastException = $e;
-            }
-            
+            $result = parent::__call($function_name, $vars);
+
             $this->content->setResultSet($result);
-            
-            $this->content->setIgnoreErrors($this->ignore_errors);
             
             return $this->content;
             
@@ -148,7 +135,7 @@ class Client extends \SoapClient
             $transport->setOptions($this->clientOptions);
             $this->content->setResultSet($transport->__doRequest($request, $location, $action, $version));
             
-            return;
+            return '';
                         
         } else {
             
@@ -166,17 +153,6 @@ class Client extends \SoapClient
     public function setPixiOptions($options)
     {
         $this->__construct(null, $options->getOptions());
-    }
-
-    /**
-     * Sets whether to ignore result faults or not.
-     * 
-     * @param string $b
-     *            if SOAP faults should be ignored, false if not
-     */
-    public function setIgnoreErrors($b = true)
-    {
-        $this->ignore_errors = $b;
     }
 
     /**

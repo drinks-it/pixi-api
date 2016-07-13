@@ -2,6 +2,9 @@
 require_once 'vendor/autoload.php';
 
 use Pixi\API\Soap\Result\ResultInterface;
+use Pixi\API\Soap\Transport\CurlTransport;
+use Pixi\API\Soap\Transport\TransportException;
+use Pixi\API\Soap\Result\ResultException;
 
 $_GET['XDEBUG_PROFILE'] = true;
 
@@ -68,20 +71,32 @@ class ReturnFake implements ResultInterface
 
 try {
     
-    $client->setResultObject('ReturnFake');
+    $transport = new CurlTransport();
+    $client->setTransportObject($transport);
+    
+    //$client->setResultObject('ReturnFake');
+    $client->setResultObject('\Pixi\API\Soap\Result\ArrayResult');
     
     // $rs = $client->pixiGetShops()->getResultset();
-    $rs = $client->pixiGetShops()->getResultset();
+    //$client->getResultObject()->setIgnoreErrors(true);
+    
+    $rs = $client->pixiGetShops(['silvester' => 500])->getResultset();
     
     print_r($rs);
     
-    echo count($rs);
-} catch (\SoapFault $s) {
+} catch(TransportException $e) {
     
-    echo $s->getMessage();
+    print_r($e->getMessage());
     
-    print_r($client->__getLastRequest());
+} catch(ResultException $e) {
+
+    print_r($e->getMessage());
     
+} catch (\SoapFault $e) {
+    
+    print_r($e->getMessage());
+    
+    /*
     print_r($e);
     echo $e->getMessage() . "\n\n";
     print_r($client->__getLastRequestHeaders());
@@ -91,10 +106,13 @@ try {
     print_r($client->__getLastResponseHeaders());
     echo "\n\n";
     print_r($client->__getLastResponse());
+    */
+    
 } catch (Exception $e) {
     
     print_r($e);
-    echo $e->getMessage() . "\n\n";
+    //echo $e->getMessage() . "\n\n";
+    /*
     print_r($client->__getLastRequestHeaders());
     echo "\n\n";
     print_r($client->__getLastRequest());
@@ -102,4 +120,6 @@ try {
     print_r($client->__getLastResponseHeaders());
     echo "\n\n";
     print_r($client->__getLastResponse());
+    */
+    
 }
