@@ -1,22 +1,22 @@
 <?php
 
-namespace Pixi\API\Soap\Transport;
+namespace Pixi\API\Soap\ParserListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CurlParserErrorListener implements EventSubscriberInterface
 {
-    
+
     public $content = array();
-    
+
     public $isRowContent = false;
-    
+
     public $contentIndex = 0;
-    
+
     public $currentTag = false;
-    
+
     public $lastTag;
-    
+
     /**
      * Mandatory method, which tells the dispatcher, which events
      * this subsriber is listening to and what method in the
@@ -32,11 +32,11 @@ class CurlParserErrorListener implements EventSubscriberInterface
     {
         return array(
             "tag.open"  => array("onTagOpen", 0),
-            "tag.data"  => array("onTagData",0),
-            "tag.close" => array("onTagClose",0)
+            "tag.data"  => array("onTagData", 0),
+            "tag.close" => array("onTagClose", 0),
         );
     }
-    
+
     /**
      * This method adds some additional information
      * to the data and creates a string, which will be
@@ -48,15 +48,18 @@ class CurlParserErrorListener implements EventSubscriberInterface
      */
     public function onTagOpen($event)
     {
+        if (strpos($event['tagName'], ':') === false) {
+            return;
+        }
 
-        list($ns, $event['tagName']) = explode(':', $event['tagName']);
-        if($event['tagName'] == 'SqlMessage') {
+        list($ns, $name) = explode(':', $event['tagName']);
+
+        if ($name == 'SqlMessage') {
             $this->isRowContent = true;
             $this->content[$this->contentIndex] = array();
         }
-        
     }
-    
+
     /**
      * Is executed when the data of an xml tag is parsed.
      * It just trims the data, without further modification.
@@ -67,18 +70,21 @@ class CurlParserErrorListener implements EventSubscriberInterface
      */
     public function onTagData($event)
     {
-    
-        list($ns, $event['tagName']) = explode(':', $event['tagName']);
-        if($this->isRowContent AND $event['tagName'] != 'SqlMessage') {
-            if(isset($this->content[$this->contentIndex][$event['tagName']])) {
-                $this->content[$this->contentIndex][$event['tagName']] .= $event['data'];
+        if (strpos($event['tagName'], ':') === false) {
+            return;
+        }
+
+        list($ns, $name) = explode(':', $event['tagName']);
+        if ($this->isRowContent AND $name != 'SqlMessage') {
+            if (isset($this->content[$this->contentIndex][$name])) {
+                $this->content[$this->contentIndex][$name] .= $event['data'];
             } else {
-                $this->content[$this->contentIndex][$event['tagName']] = $event['data'];
+                $this->content[$this->contentIndex][$name] = $event['data'];
             }
         }
-         
+
     }
-    
+
     /**
      * This method adds some additional information
      * to the data and creates a string, which will be
@@ -90,16 +96,20 @@ class CurlParserErrorListener implements EventSubscriberInterface
      */
     public function onTagClose($event)
     {
-        list($ns, $event['tagName']) = explode(':', $event['tagName']);
-        if($event['tagName'] == 'SqlMessage') {
+        if (strpos($event['tagName'], ':') === false) {
+            return;
+        }
+
+        list($ns, $name) = explode(':', $event['tagName']);
+        if ($name == 'SqlMessage') {
             $this->isRowContent = false;
             $this->contentIndex++;
         }
     }
-    
+
     public function getResultSet()
     {
         return $this->content;
     }
-    
+
 }
