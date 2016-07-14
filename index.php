@@ -74,27 +74,27 @@ try {
     $transport = new CurlTransport();
     $client->setTransportObject($transport);
     
-    //$client->setResultObject('ReturnFake');
+//    $client->setResultObject('ReturnFake');
     $client->setResultObject('\Pixi\API\Soap\Result\ArrayResult');
     
     // $rs = $client->pixiGetShops()->getResultset();
-    //$client->getResultObject()->setIgnoreErrors(true);
+//    $client->getResultObject()->setIgnoreErrors(true);
     
-    $rs = $client->pixiGetShops(['silvester' => 500])->getResultset();
-    
+    $rs = $client->pixiGetShopss(['silvester' => 500])->getResultset();
+
     print_r($rs);
     
 } catch(TransportException $e) {
     
-    print_r($e->getMessage());
+    print_r($e);
     
 } catch(ResultException $e) {
 
-    print_r($e->getMessage());
+    print_r($e);
     
 } catch (\SoapFault $e) {
-    
-    print_r($e->getMessage());
+
+    print_r($e);
     
     /*
     print_r($e);
