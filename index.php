@@ -80,7 +80,8 @@ try {
     // $rs = $client->pixiGetShops()->getResultset();
 //    $client->getResultObject()->setIgnoreErrors(true);
     
-    $rs = $client->pixiGetShopss(['silvester' => 500])->getResultset();
+    $rs = $client->pixiGetShops(['silvester' => 500])->getResultset();
+//    $rs = $client->getRevision();
 
     print_r($rs);
     

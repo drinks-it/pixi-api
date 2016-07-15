@@ -5,11 +5,11 @@ class ArrayResult implements ResultInterface
 {
 
     public $resultSet;
-    
+
     public $error = false;
 
     private $ignore_errors;
-    
+
     /**
      *
      * {@inheritDoc}
@@ -27,7 +27,7 @@ class ArrayResult implements ResultInterface
             );
 
         }
-        
+
         return $this->resultSet;
     }
 
@@ -42,11 +42,11 @@ class ArrayResult implements ResultInterface
         $this->ignore_errors = $bool;
         return $this;
     }
-    
+
 
     public function setResultSet($result)
     {
-        if(is_array($result)) {
+        if (is_array($result)) {
             $this->error = $result['error'];
             $this->resultSet = $result['resultSet'];
         }

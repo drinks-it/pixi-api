@@ -4,6 +4,8 @@ namespace Pixi\API\Soap\Tests;
 
 use Pixi\API\Soap\Client;
 use Pixi\API\Soap\Options;
+use Pixi\API\Soap\Result\ArrayResult;
+use Pixi\API\Soap\Transport\CurlTransport;
 
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -130,5 +132,39 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $client = new Client(null, $this->options);
 
         $rs = $client->GetShops()->getResultSet();
+    }
+
+    public function testClientWithCurlTransportStringDefinition()
+    {
+        $client = new Client(null, $this->options);
+        $client->setTransportObject('\Pixi\API\Soap\Transport\CurlTransport');
+
+        $resultObject = new ArrayResult();
+        $client->setResultObject($resultObject);
+
+        $rs = $client->pixiGetShops()->getResultSet();
+        $this->assertSame($this->expectedResult, $rs);
+    }
+
+    public function testClientWithCurlTransportObjectDefenition()
+    {
+        $client = new Client(null, $this->options);
+        $transport = new CurlTransport();
+        $client->setTransportObject('\Pixi\API\Soap\Transport\CurlTransport');
+
+        $resultObject = new ArrayResult();
+        $client->setResultObject($resultObject);
+
+        $rs = $client->pixiGetShops()->getResultSet();
+        $this->assertSame($this->expectedResult, $rs);
+    }
+
+    public function testGetRevision()
+    {
+        $client = new Client(null, $this->options);
+
+        $rs = $client->getRevision();
+
+        $this->assertSame(0, $rs);
     }
 }

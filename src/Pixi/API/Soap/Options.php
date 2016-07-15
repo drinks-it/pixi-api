@@ -5,8 +5,8 @@ class Options
 {
 
     protected $options = array(
-        'user_agent'    => 'pixi API Client 0.1',
-        'soap_version'  => SOAP_1_2
+        'user_agent'   => 'pixi API Client 0.1',
+        'soap_version' => SOAP_1_2,
     );
 
     public function __construct($login, $password, $uri, $location = null, $trace = false)
@@ -18,13 +18,13 @@ class Options
             ->setTrace($trace);
         return $this;
     }
-    
+
     public function setStreamContextOptions($options)
     {
         $this->options['stream_context'] = $options;
         return $this;
     }
-    
+
     public function allowSelfSigned($allow = true)
     {
         $this->setStreamContextOptions(['ssl' => ['allow_self_signed' => $allow]]);
@@ -76,5 +76,5 @@ class Options
         $this->options['ssl_method'] = $sslMethod;
         return $this;
     }
-    
+
 }

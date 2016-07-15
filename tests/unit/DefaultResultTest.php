@@ -165,14 +165,15 @@ class DefaultResultTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Pixi\API\Soap\Result\ResultException
      */
     public function testGetResultWhenThereIsError()
     {
         $defaultResult = new DefaultResult();
-        $defaultResult->setResultSet(array());
+        $defaultResult->setResultSet(array('SqlMessage' => array('Message' => 'Error', 'Number' => 400)));
 
         $defaultResult->getResultSet();
+
     }
 
     public function testGetResultCode()

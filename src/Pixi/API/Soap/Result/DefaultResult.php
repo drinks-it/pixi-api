@@ -2,8 +2,6 @@
 
 namespace Pixi\API\Soap\Result;
 
-use Pixi\API\Soap\Result\ResultInterface;
-
 /**
  * This object contains a result from pixi* API
  *
@@ -36,19 +34,19 @@ class DefaultResult implements ResultInterface
      */
     function getResultSet()
     {
-        
+
         $result = $this->_result;
-        
+
         /* Return immediatelly if result is an function call result */
         if (!is_array($result) && !is_object($result)) {
             return $result;
         } else {
             $result = $this->object2array($result);
         }
-        
+
         /* Check if results are present */
         if ($this->findKey($result, 'diffgram')) {
-        
+
             if (isset($result['SqlRowSet'])) {
                 return $this->formatResult($result['SqlRowSet']);
             } else {
@@ -60,19 +58,19 @@ class DefaultResult implements ResultInterface
                 }
             }
         }
-        
+
         /* There is no result set, but there is also no error occured */
         if (isset($result['SqlResultCode']) && $result['SqlResultCode'] == 0) {
             return array();
         }
-        
+
         if (!$this->ignore_errors AND is_array($result) AND isset($result['SqlMessage'])) {
-        
+
             throw new ResultException(
                 $result['SqlMessage']['Message'],
                 $result['SqlMessage']['Number']
             );
-        
+
         }
 
     }

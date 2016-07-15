@@ -11,22 +11,25 @@ class ArrayResultTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->resultSet = array(
-            array(
-                'ShopID'   => 'ABC',
-                'ShopName' => 'ABC Testshop',
-                'Address'  => 'Walter-Gropius-Str. 15',
-                'City'     => 'Muenchen',
-                'ZIP'      => '80807',
-                'Country'  => 'D',
+            'resultSet' => array(
+                array(
+                    'ShopID'   => 'ABC',
+                    'ShopName' => 'ABC Testshop',
+                    'Address'  => 'Walter-Gropius-Str. 15',
+                    'City'     => 'Muenchen',
+                    'ZIP'      => '80807',
+                    'Country'  => 'D',
+                ),
+                array(
+                    'ShopID'   => 'DEF',
+                    'ShopName' => 'DEF new Testshop',
+                    'Address'  => 'Haupstraße 15',
+                    'City'     => 'München',
+                    'ZIP'      => '81245',
+                    'Country'  => 'D',
+                ),
             ),
-            array(
-                'ShopID'   => 'DEF',
-                'ShopName' => 'DEF new Testshop',
-                'Address'  => 'Haupstraße 15',
-                'City'     => 'München',
-                'ZIP'      => '81245',
-                'Country'  => 'D',
-            ),
+            'error'     => array(),
         );
     }
 
@@ -40,7 +43,23 @@ class ArrayResultTest extends \PHPUnit_Framework_TestCase
         $arrayResult = new ArrayResult();
         $arrayResult->setResultSet($this->resultSet);
 
-        $this->assertSame($this->resultSet, $arrayResult->getResultSet());
+        $this->assertSame($this->resultSet['resultSet'], $arrayResult->getResultSet());
+    }
+
+    /**
+     * @expectedException \Pixi\API\Soap\Result\ResultException
+     */
+    public function testGetResultSetWithErrors()
+    {
+        $result = array(
+            'error'     => array(array('Message' => 'Error', 'Number' => 400)),
+            'resultSet' => array(),
+        );
+
+        $arrayResult = new ArrayResult();
+        $arrayResult->setResultSet($result);
+
+        $arrayResult->getResultSet();
     }
 
     public function testSetIgnoreErrors()
