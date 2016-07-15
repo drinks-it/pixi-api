@@ -27,7 +27,14 @@ class Options
 
     public function allowSelfSigned($allow = true)
     {
-        $this->setStreamContextOptions(['ssl' => ['allow_self_signed' => $allow]]);
+        $this->setStreamContextOptions(
+            ['ssl' => [
+                'allow_self_signed' => $allow,
+                'verify_peer'       => false,
+                'verify_peer_name'  => false
+            ]
+        ]);
+        
         return $this;
     }
 

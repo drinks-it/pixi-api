@@ -8,11 +8,16 @@
 		}
 	],
 	"authors" : [{
-			"name" : "Silvester Maraz",
-			"email" : "smaraz@pixi.eu"
+			"name" : "Gregor Walter",
+			"email" : "gw@pixi.eu"
 		}, {
+            "name" : "Korbinian Ober",
+            "email" : "ko@pixi.eu"
 			"name" : "Florian Seidl",
 			"email" : "fs@pixi.eu"
+		}, {
+			"name" : "Silvester Maraž",
+			"email" : "smaraz@pixi.eu"
 		}
 	],
 	"require" : {
