@@ -27,35 +27,35 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         ],
     );
 
-    private $expectedResult = array (
-            array (
-                'ShopID' => 'FLO',
-                'ShopName' => 'FLO',
-                'Country' => 'D',
-            ),
-            array (
-                'ShopID' => 'STG',
-                'ShopName' => 'Hier Webadresse des Shops eintragen!',
-                'Address' => 'Hier Strasse und Hausnummer eintragen!',
-                'City' => 'Hier Ort eintragen!',
-                'State' => 'GER',
-                'ZIP' => 'PLZ',
-                'Country' => 'D  ',
-                'Contact' => 'Hier Ansprechpartner eintragen!',
-                'Phone' => 'Hier Telefonnummer von Ansprechpartner eintragen!',
-                'Fax' => 'Hier Faxnummer eintragen',
-                'ShopCompany' => 'Firma',
-                'eMail' => 'installation@pixi.eu',
-                'BIC' => 'UstID und Steuernummer',
-                'IBAN' => 'IBAN und SWIFT',
-                'KontoBLZ' => 'Kontonummer und BLZ',
-                'BankName' => 'Bankname',
-            ),
-            array (
-                'ShopID' => 'URO',
-                'ShopName' => 'URO',
-                'Country' => 'D',
-            ),
+    private $expectedResult = array(
+        array(
+            'ShopID'   => 'FLO',
+            'ShopName' => 'FLO',
+            'Country'  => 'D',
+        ),
+        array(
+            'ShopID'      => 'STG',
+            'ShopName'    => 'Hier Webadresse des Shops eintragen!',
+            'Address'     => 'Hier Strasse und Hausnummer eintragen!',
+            'City'        => 'Hier Ort eintragen!',
+            'State'       => 'GER',
+            'ZIP'         => 'PLZ',
+            'Country'     => 'D  ',
+            'Contact'     => 'Hier Ansprechpartner eintragen!',
+            'Phone'       => 'Hier Telefonnummer von Ansprechpartner eintragen!',
+            'Fax'         => 'Hier Faxnummer eintragen',
+            'ShopCompany' => 'Firma',
+            'eMail'       => 'installation@pixi.eu',
+            'BIC'         => 'UstID und Steuernummer',
+            'IBAN'        => 'IBAN und SWIFT',
+            'KontoBLZ'    => 'Kontonummer und BLZ',
+            'BankName'    => 'Bankname',
+        ),
+        array(
+            'ShopID'   => 'URO',
+            'ShopName' => 'URO',
+            'Country'  => 'D',
+        ),
     );
 
 
@@ -146,7 +146,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->expectedResult, $rs);
     }
 
-    public function testClientWithCurlTransportObjectDefenition()
+    public function testClientWithCurlTransportObjectDefinition()
     {
         $client = new Client(null, $this->options);
         $transport = new CurlTransport();
@@ -157,6 +157,50 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $rs = $client->pixiGetShops()->getResultSet();
         $this->assertSame($this->expectedResult, $rs);
+    }
+
+    /**
+     * @expectedException \Pixi\API\Soap\Transport\TransportException
+     */
+    public function testClientWithCurlTrasnportObjectThrowingTransportException()
+    {
+        $client = new Client(null, array_merge($this->options, array(
+            "location" => 'https://virgo3.api.pixis.eu/pixiAPP/',
+            "uri"      => 'https://virgo3.api.pixi.eu/pixiAPP/',
+        )));
+        $client->setTransportObject('\Pixi\API\Soap\Transport\CurlTransport');
+
+        $resultObject = new ArrayResult();
+        $client->setResultObject($resultObject);
+
+        $client->pixiGetShops()->getResultSet();
+    }
+
+    /**
+     * @expectedException \Pixi\API\Soap\Transport\CurlSoapFault
+     */
+    public function testClientWithCurlTrasnportObjectThrowingCurlSoapFault()
+    {
+        $client = new Client(null, $this->options);
+        $client->setTransportObject('\Pixi\API\Soap\Transport\CurlTransport');
+
+        $resultObject = new ArrayResult();
+        $client->setResultObject($resultObject);
+
+        $client->pixiGetShopss()->getResultSet();
+    }
+
+    /**
+     * @expectedException \Pixi\API\Soap\Result\ResultException
+     */
+    public function testClientWithCurlTrasnportObjectThrowingResultException()
+    {
+        $client = new Client(null, $this->options);
+        $transport = new CurlTransport();
+        $client->setTransportObject($transport);
+
+        $client->setResultObject('\Pixi\API\Soap\Result\ArrayResult');
+        $client->pixiGetShops(['silvester' => 500])->getResultset();
     }
 
     public function testGetRevision()
