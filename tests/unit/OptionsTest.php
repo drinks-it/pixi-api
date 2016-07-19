@@ -18,14 +18,6 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
         $this->options = null;
     }
 
-    /**
-     * @expectedException ErrorException
-     */
-    public function testConstructErrorException()
-    {
-        new Options();
-    }
-
     public function testContruct()
     {
         $optionsProperty = array(
@@ -47,9 +39,16 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($optionsProperty, $property->getValue($options));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    public function testSetStreamContextOptions()
+    {
+        $this->assertInstanceOf('Pixi\API\Soap\Options', $this->options->setStreamContextOptions(array()));
+    }
+
+    public function testAllowSelfSigned()
+    {
+        $this->assertInstanceOf('Pixi\API\Soap\Options', $this->options->allowSelfSigned(true));
+    }
+
     public function testMethodChaining()
     {
         $this->assertInstanceOf('Pixi\API\Soap\Options', $this->options->setLogin(1)->setPassword(1)->setUri(1));

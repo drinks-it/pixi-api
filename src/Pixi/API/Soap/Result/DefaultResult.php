@@ -2,8 +2,6 @@
 
 namespace Pixi\API\Soap\Result;
 
-use Pixi\API\Soap\Result\ResultInterface;
-
 /**
  * This object contains a result from pixi* API
  *
@@ -11,16 +9,23 @@ use Pixi\API\Soap\Result\ResultInterface;
  */
 class DefaultResult implements ResultInterface
 {
-    
+
     private $_result = null;
+
+    /**
+     * Whether result faults should be ignored or not
+     * @var bool
+     */
+    private $ignore_errors = false;
+
 
     public function setResultSet($result)
     {
         $this->_result = $result;
     }
-    
+
     /**
-     * GetResultset
+     * GetResultSet
      *
      * Returns a result set from the result
      *
@@ -29,37 +34,45 @@ class DefaultResult implements ResultInterface
      */
     function getResultSet()
     {
+
         $result = $this->_result;
 
         /* Return immediatelly if result is an function call result */
-        if(!is_array($result) && !is_object($result)) {
+        if (!is_array($result) && !is_object($result)) {
             return $result;
         } else {
             $result = $this->object2array($result);
         }
 
         /* Check if results are present */
-        if($this->findKey($result, 'diffgram')) {
-        	if (isset($result['SqlRowSet']))
-            	return $this->formatResult($result['SqlRowSet']);
-        	else {
-        		foreach ($result as $subresult) {
-        			if (isset($subresult['SqlRowSet'])) {
-        				return $this->formatResult($subresult['SqlRowSet']);
-        			}
-        		}
-        	}
+        if ($this->findKey($result, 'diffgram')) {
+
+            if (isset($result['SqlRowSet'])) {
+                return $this->formatResult($result['SqlRowSet']);
+            } else {
+                // we get an array when there are variables in soap api output
+                foreach ($result as $subResult) {
+                    if (isset($subResult['SqlRowSet'])) {
+                        return $this->formatResult($subResult['SqlRowSet']);
+                    }
+                }
+            }
         }
 
         /* There is no result set, but there is also no error occured */
         if (isset($result['SqlResultCode']) && $result['SqlResultCode'] == 0) {
-        	return array();
+            return array();
         }
-        
-        if (!$this->ignore_errors) {
-        	throw new \Exception('There was an error in the incomming resultset.'."\nPayload: ".print_r($result, true));
+
+        if (!$this->ignore_errors AND is_array($result) AND isset($result['SqlMessage'])) {
+
+            throw new ResultException(
+                $result['SqlMessage']['Message'],
+                $result['SqlMessage']['Number']
+            );
+
         }
-        
+
     }
 
     /**
@@ -73,36 +86,36 @@ class DefaultResult implements ResultInterface
     private function formatResult($data)
     {
         /* Check if result has multiple row sets */
-        if(!empty($data['diffgram'])) {
+        if (!empty($data['diffgram'])) {
 
             /* Check if the row of the row set has multiple items */
-            if(!isset($data['diffgram']['SqlRowSet1']['row'][0])) {
+            if (!isset($data['diffgram']['SqlRowSet1']['row'][0])) {
                 /* Return single row in array for unified results */
                 return array($data['diffgram']['SqlRowSet1']['row']);
             }
-            
+
             return $data['diffgram']['SqlRowSet1']['row'];
 
-        } else if(!empty($data[0]['diffgram'])) {
-            
+        } elseif (!empty($data[0]['diffgram'])) {
+
             $result = array();
-            
+
             for ($i = 0; $i < count($data); $i++) {
-                
+
                 $j = $i + 1;
                 $rowSet = "SqlRowSet" . $j;
-                
-                if(isset($data[$i]['diffgram'][$rowSet])) {
+
+                if (isset($data[$i]['diffgram'][$rowSet])) {
                     $result[] = array($data[$i]['diffgram'][$rowSet]['row']);
                 }
 
             }
-            
+
             return $result;
-            
+
         }
-		
-		return array();
+
+        return array();
     }
 
     /**
@@ -137,12 +150,16 @@ class DefaultResult implements ResultInterface
     private function findKey($haystack, $needle)
     {
         $result = array_key_exists($needle, $haystack);
-        if ($result) return $result;
+        if ($result) {
+            return $result;
+        }
         foreach ($haystack as $v) {
             if (is_array($v)) {
                 $result = $this->findKey($v, $needle);
             }
-            if ($result) return $result;
+            if ($result) {
+                return $result;
+            }
         }
         return $result;
     }
@@ -154,7 +171,7 @@ class DefaultResult implements ResultInterface
      */
     function getResultCode()
     {
-        return $this->isResultset() ? $this->_result['SqlResultCode'] : null;
+        return $this->isResultSet() ? $this->_result->SqlResultCode : null;
     }
 
     /**
@@ -174,7 +191,7 @@ class DefaultResult implements ResultInterface
      */
     function getValue()
     {
-        return $this->isResultset() ? null : $this->_result;
+        return is_callable($this->_result) ? $this->_result : null;
     }
 
     /**
@@ -182,9 +199,9 @@ class DefaultResult implements ResultInterface
      *
      * @return bool
      */
-    function hasMultipleResultsets()
+    function hasMultipleResultSets()
     {
-        if($this->isResultset() && !empty($this->_result['SqlRowSet'][0])) {
+        if ($this->isResultSet() && !empty($this->_result->SqlRowSet[0])) {
             return true;
         }
 
@@ -196,42 +213,42 @@ class DefaultResult implements ResultInterface
      *
      * @return bool
      */
-    function isResultset()
+    function isResultSet()
     {
-        return is_array($this->_result);
+        return is_object($this->_result);
     }
 
-    /**
-     * Whether result faults should be ignored or not
-     * @var bool
-     */
-    private $ignore_errors = false;
-    
+
     /**
      * Sets whether to ignore result faults or not.
-     * @param string $b		true if SOAP faults should be ignored, false if not
+     * @param string $b true if SOAP faults should be ignored, false if not
      */
-    public function setIgnoreErrors($b = true) {
-    	$this->ignore_errors = $b;
+    public function setIgnoreErrors($b = true)
+    {
+        $this->ignore_errors = $b;
     }
+
     /**
      * true, if this result has one or more SQL messages, false if not
      * @return bool
      */
-    public function hasMessages() {
-    	 return isset($this->_result->SqlMessage);
+    public function hasMessages()
+    {
+        return isset($this->_result->SqlMessage);
     }
+
     /**
      * returns all SQL messages available in this result
      * @return array
      */
-    public function getMessages() {
-    	if ($this->hasMessages())
-    		return isset($this->_result->SqlMessage[0]) ? $this->_result->SqlMessage : array($this->_result->SqlMessage);
-    	else
-    		return array();
+    public function getMessages()
+    {
+        if ($this->hasMessages()) {
+            return is_array($this->_result->SqlMessage) ? $this->_result->SqlMessage : array($this->_result->SqlMessage);
+        } else {
+            return array();
+        }
     }
-
 
 
 }

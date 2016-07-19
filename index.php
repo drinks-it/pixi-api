@@ -1,9 +1,12 @@
 <?php
-use Pixi\API\Soap\ResultInterface;
+require_once 'vendor/autoload.php';
+
+use Pixi\API\Soap\Result\ResultInterface;
+use Pixi\API\Soap\Transport\CurlTransport;
+use Pixi\API\Soap\Transport\TransportException;
+use Pixi\API\Soap\Result\ResultException;
 
 $_GET['XDEBUG_PROFILE'] = true;
-
-require_once 'vendor/autoload.php';
 
 if (file_exists('config.php')) {
     require_once 'config.php';
@@ -48,17 +51,6 @@ class ReturnFake implements ResultInterface
         return $this->rs;
     }
 
-    /**
-     *
-     * {@inheritDoc}
-     *
-     * @see \Pixi\API\Soap\ResultInterface::__construct()
-     */
-    public function __construct($result)
-    {
-        // TODO: Auto-generated method stub
-        $this->rs = $result;
-    }
 
     /**
      *
@@ -70,25 +62,48 @@ class ReturnFake implements ResultInterface
     {
         // TODO: Auto-generated method stub
     }
-    
+
+    public function setResultSet($result)
+    {
+        $this->rs = $result;
+    }
 }
 
 try {
     
-    $client->setResultObject('ReturnFake');
+    $transport = new CurlTransport();
+    $client->setTransportObject($transport);
     
-    // $rs = $client->pixiGetShops()->getResultset();
-    $rs = $client->pixiGetShops()->getResultset();
+//    $client->setResultObject('ReturnFake');
+    $client->setResultObject('\Pixi\API\Soap\Result\ArrayResult');
     
+     $rs = $client->pixiGetShops()->getResultset();
+//    $client->getResultObject()->setIgnoreErrors(true);
+    
+//    $rs = $client->pixiGetShops(['silvester' => 500])->getResultset();
+//    $rs = $client->getRevision();
+
+//    $rs = $client->pixiGetOrderline(array('OrderlineKey' => '45897', 'ShopID' => 'AMA'))->getResultSet();
+    //use with master api
+//    $rs = $client->pixiGetApiCallDetails(array('ApiCallKey ' => '410'))->getResultSet();
+
+//    $rs = $client->pixiCheckPixiUserLogin(array('UserName' => 'master', 'Password' => 'U5erDay52016'))->getResultSet();
+
     print_r($rs);
     
-    echo count($rs);
-} catch (\SoapFault $s) {
+} catch(TransportException $e) {
     
-    echo $s->getMessage();
+    print_r($e);
     
-    print_r($client->__getLastRequest());
+} catch(ResultException $e) {
+
+    print_r($e);
     
+} catch (\SoapFault $e) {
+
+    print_r($e);
+    
+    /*
     print_r($e);
     echo $e->getMessage() . "\n\n";
     print_r($client->__getLastRequestHeaders());
@@ -98,10 +113,13 @@ try {
     print_r($client->__getLastResponseHeaders());
     echo "\n\n";
     print_r($client->__getLastResponse());
+    */
+    
 } catch (Exception $e) {
     
     print_r($e);
-    echo $e->getMessage() . "\n\n";
+    //echo $e->getMessage() . "\n\n";
+    /*
     print_r($client->__getLastRequestHeaders());
     echo "\n\n";
     print_r($client->__getLastRequest());
@@ -109,4 +127,6 @@ try {
     print_r($client->__getLastResponseHeaders());
     echo "\n\n";
     print_r($client->__getLastResponse());
+    */
+    
 }
