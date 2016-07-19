@@ -66,10 +66,8 @@ class CurlTransport implements TransportInterface
                 'Content-type: text/xml'
             ]
         );
-        $xml = '';
 
-        curl_setopt($this->ch, CURLOPT_WRITEFUNCTION, function($a, $b) use ($parser, &$xml) {
-            $xml .= $b;
+        curl_setopt($this->ch, CURLOPT_WRITEFUNCTION, function($a, $b) use ($parser) {
             $parser->parse($b);
             return strlen($b);
         });
