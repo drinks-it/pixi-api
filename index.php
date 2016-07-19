@@ -77,11 +77,17 @@ try {
 //    $client->setResultObject('ReturnFake');
     $client->setResultObject('\Pixi\API\Soap\Result\ArrayResult');
     
-    // $rs = $client->pixiGetShops()->getResultset();
+     $rs = $client->pixiGetShops()->getResultset();
 //    $client->getResultObject()->setIgnoreErrors(true);
     
-    $rs = $client->pixiGetShops(['silvester' => 500])->getResultset();
+//    $rs = $client->pixiGetShops(['silvester' => 500])->getResultset();
 //    $rs = $client->getRevision();
+
+//    $rs = $client->pixiGetOrderline(array('OrderlineKey' => '45897', 'ShopID' => 'AMA'))->getResultSet();
+    //use with master api
+//    $rs = $client->pixiGetApiCallDetails(array('ApiCallKey ' => '410'))->getResultSet();
+
+//    $rs = $client->pixiCheckPixiUserLogin(array('UserName' => 'master', 'Password' => 'U5erDay52016'))->getResultSet();
 
     print_r($rs);
     
