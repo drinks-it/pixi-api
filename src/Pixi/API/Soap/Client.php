@@ -1,7 +1,6 @@
 <?php
 namespace Pixi\API\Soap;
 
-use Pixi\API\Soap\Exception\PixiApiException;
 use Pixi\AppsFactory\Environment;
 
 class Client extends \SoapClient
@@ -156,39 +155,6 @@ class Client extends \SoapClient
     }
 
     /**
-     * GetRevision
-     *
-     * This method returns the current API revision that is applied to
-     * the pixi database.
-     *
-     * @access public
-     * @return mixed Revisionnumber or Exception
-     */
-    public function getRevision()
-    {
-
-        $request = $this->pixiSysGetCurrentRevision();
-        $response = $request->getResultSet();
-
-        if (count($response) > 0 && isset($response[0]['CurrentRevision'])) {
-            return $response[0]['CurrentRevision'];
-        }
-
-        $request = $this->pixiSysGetCallInfo(array(
-            'CallName' => 'pixiSysGetCurrentRevision',
-        ));
-        $response = $request->getResultSet();
-
-        if (isset($response[0]['StatusMessage']) && strstr($response[0]['StatusMessage'], 'not installed')) {
-            throw new PixiApiException("Could not find an API revision number. API call pixiSysGetCurrentRevision is missing on the database",
-                1);
-        }
-
-        throw new PixiApiException("Couldn't find and API revision number", 0);
-
-    }
-
-    /**
      * Clear the the content variable of the object.
      * Cleaning up memory after big queries.
      */
@@ -229,7 +195,5 @@ class Client extends \SoapClient
         }
 
         return $this->transportObject;
-
     }
-
 }

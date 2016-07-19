@@ -202,13 +202,4 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $client->setResultObject('\Pixi\API\Soap\Result\ArrayResult');
         $client->pixiGetShops(['silvester' => 500])->getResultset();
     }
-
-    public function testGetRevision()
-    {
-        $client = new Client(null, $this->options);
-
-        $rs = $client->getRevision();
-
-        $this->assertSame(0, $rs);
-    }
 }
