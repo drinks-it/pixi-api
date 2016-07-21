@@ -8,7 +8,7 @@ class ArrayResult implements ResultInterface
 
     public $error = false;
 
-    private $ignore_errors;
+    private $ignore_errors = false;
 
     /**
      *
@@ -19,7 +19,10 @@ class ArrayResult implements ResultInterface
     public function getResultSet()
     {
 
-        if (!$this->ignore_errors AND $this->error AND count($this->error) > 0) {
+        if (!$this->ignore_errors
+            AND $this->error
+            AND count($this->error) > 0
+            AND !$this->resultSet) {
 
             throw new ResultException(
                 $this->error[0]['Message'],
