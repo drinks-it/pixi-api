@@ -45,7 +45,7 @@ $uri = 'https://leonidas.api.madgeniuses.net/pixiAPP/'; // Enpoint of your API
 $location = 'https://leonidas.api.madgeniuses.net/pixiAPP/'; // if your uri is differend from the endpoint location should be added and uri corrected
 
 $options = new Pixi\API\Soap\Options($username, $password, $uri, $location);
-$options->allowSelfSigned(true); // if the certificate is self signed
+$options->allowSelfSigned(); // if the certificate is self signed
 
 $soapClient = new \Pixi\API\Soap\Client(null, $options->getOptions());
 
