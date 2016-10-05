@@ -33,6 +33,7 @@ class CurlTransport implements TransportInterface
             CURLOPT_POST            => true,
             CURLOPT_USERPWD         => $this->options['login'] . ':' . $this->options['password'],
             CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_SSL_VERIFYHOST  => false,
             CURLOPT_BUFFERSIZE      => 1024
         ]);
         
