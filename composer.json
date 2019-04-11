@@ -1,6 +1,6 @@
 {
   "name": "pixi/api",
-  "description": "Soap client needed to connection to pixi* SOAP api",
+  "description": "A simple decorator pattern over the native soap client in PHP to make it easier to work with.",
   "license": "MIT",
   "repositories": [
     {
@@ -8,34 +8,19 @@
       "url": "https://apps-live.pixi.eu/satis"
     }
   ],
-  "authors": [
-    {
-      "name": "Gregor Walter",
-      "email": "gw@pixi.eu"
-    },
-    {
-      "name": "Marko Antolović",
-      "email": "ma@pixi.eu"
-    },
-    {
-      "name": "Florian Seidl",
-      "email": "fs@pixi.eu"
-    },
-    {
-      "name": "Silvester Maraž",
-      "email": "smaraz@pixi.eu"
-    }
-  ],
   "require": {
+    "php": ">=7.1 <8.0",
     "pixi/factory": "^0.0",
-    "pixi/saxparser": "~1.0"
+    "pixi/saxparser": "~1.0",
+    "ext-curl": "*",
+    "ext-soap": "*"
   },
   "require-dev": {
-    "codeception/codeception": "~2.2.0"
+    "phpunit/phpunit": "~8.1"
   },
   "autoload": {
-    "psr-0": {
-      "Pixi": "src/"
+    "psr-4": {
+      "Pixi\\": "src/Pixi/"
     }
   }
 }

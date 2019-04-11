@@ -1,14 +1,18 @@
 <?php
+
 namespace Pixi\API\Soap;
 
 use Pixi\AppsFactory\Environment;
 
+/**
+ * Class Client
+ * @package Pixi\API\Soap
+ */
 class Client extends \SoapClient
 {
-
     /**
      *
-     * @var \Pixi\API\Soap\Result Value will be kept
+     * @var \Pixi\API\Soap\Result\ResultInterface Value will be kept
      */
     public $content;
 
@@ -76,13 +80,13 @@ class Client extends \SoapClient
 
     }
 
-    /*
-     * (non-PHPdoc)
-     * @see SoapClient::__call()
+    /**
+     * @param string $function_name
+     * @param array $arguments
+     * @return mixed|object|Result\ResultInterface|string
      */
     public function __call($function_name, $arguments)
     {
-
         if (substr($function_name, 0, 4) == 'pixi') {
 
             $vars = array();
@@ -122,12 +126,18 @@ class Client extends \SoapClient
             return parent::__call($function_name, $arguments);
 
         }
-
     }
 
+    /**
+     * @param string $request
+     * @param string $location
+     * @param string $action
+     * @param int $version
+     * @param int $oneWay
+     * @return string
+     */
     public function __doRequest($request, $location, $action, $version, $oneWay = 0)
     {
-
         if ($this->transportObject) {
 
             $transport = $this->getTransportObject();
@@ -141,7 +151,6 @@ class Client extends \SoapClient
             return parent::__doRequest($request, $location, $action, $version);
 
         }
-
     }
 
     /**
@@ -160,14 +169,14 @@ class Client extends \SoapClient
      */
     public function clearContent()
     {
-
         $this->content = null;
-
     }
 
+    /**
+     * @return object|string
+     */
     public function getResultObject()
     {
-
         if (is_string($this->resultObject)) {
             $this->resultObject = new $this->resultObject;
         }
@@ -175,21 +184,31 @@ class Client extends \SoapClient
         return $this->resultObject;
     }
 
+    /**
+     * @param $resultObject
+     * @return $this
+     */
     public function setResultObject($resultObject)
     {
         $this->resultObject = $resultObject;
         return $this;
     }
 
+    /**
+     * @param $object
+     * @return $this
+     */
     public function setTransportObject($object)
     {
         $this->transportObject = $object;
         return $this;
     }
 
+    /**
+     * @return object|string
+     */
     public function getTransportObject()
     {
-
         if (is_string($this->transportObject)) {
             $this->transportObject = new $this->transportObject;
         }

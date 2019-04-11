@@ -8,23 +8,37 @@ use Pixi\Xml\Parser\Sax;
 use Pixi\API\Soap\ParserListener\CurlParserListener;
 use Pixi\API\Soap\ParserListener\CurlParserErrorListener;
 
-
+/**
+ * Class CurlTransport
+ * @package Pixi\API\Soap\Transport
+ */
 class CurlTransport implements TransportInterface
 {
-    
+    /**
+     * @var array
+     */
     public $options;
-    
+
+    /**
+     * @var resource|false a cURL handle on success, false on errors.
+     */
     public $ch;
-    
+
+    /**
+     * @param array $options
+     * @return $this
+     */
     public function setOptions($options)
     {
         $this->options = $options;
         return $this;
     }
-    
+
+    /**
+     * @return false|resource
+     */
     public function createClient()
     {
-        
         $this->ch = curl_init();
         
         curl_setopt_array($this->ch, [
@@ -38,12 +52,19 @@ class CurlTransport implements TransportInterface
         ]);
         
         return $this->ch;
-        
     }
-    
+
+    /**
+     * @param $request
+     * @param null $location
+     * @param null $action
+     * @param null $version
+     * @return array
+     * @throws CurlSoapFault
+     * @throws TransportException
+     */
     public function __doRequest($request, $location = NULL, $action = NULL, $version = NULL)
     {
-        
         $parser = new Sax();
         $listener = new CurlParserListener();
         $errorListener = new CurlParserErrorListener();
@@ -89,7 +110,6 @@ class CurlTransport implements TransportInterface
         $parser->__destruct();
 
         return ['resultSet' => $listener->getResultset(), 'error' => $errorListener->getResultSet()];
-        
     }
 
 }

@@ -1,26 +1,17 @@
 <?php
 
-// Including the autoloader and an Subscriber
 require __DIR__.'/../vendor/autoload.php';
 
 $username = 'pixiAPP';
 $password = 'fHNzq44NA6kaDm_APP';
-$endpoint = 'https://leonidas.api.madgeniuses.net/pixiAPP/';
+$endpoint = "https://soap.pixi.eu/soap/$username/";
 
 $options = new Pixi\API\Soap\Options($username, $password, $endpoint);
-
 $options->allowSelfSigned();
-
-/*
-$options->setStreamContextOptions(array(
-    'ssl' => array(
-        'allow_self_signed' => true,
-    )
-));
-*/
 
 $soapClient = new \Pixi\API\Soap\Client(null, $options->getOptions());
 
-echo $soapClient->getRevision();
+$resultArray = $soapClient->pixiGetShops()->getResultset();
 
-print_r($soapClient->pixiGetShops()->getResultSet());
+echo '<pre>';
+var_dump($resultArray);
