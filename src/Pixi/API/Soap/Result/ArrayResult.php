@@ -1,20 +1,31 @@
 <?php
+
 namespace Pixi\API\Soap\Result;
 
+/**
+ * Class ArrayResult
+ * @package Pixi\API\Soap\Result
+ */
 class ArrayResult implements ResultInterface
 {
-
+    /**
+     * @var array
+     */
     public $resultSet;
 
+    /**
+     * @var bool
+     */
     public $error = false;
 
+    /**
+     * @var bool
+     */
     private $ignore_errors = false;
 
     /**
-     *
-     * {@inheritDoc}
-     *
-     * @see \Pixi\API\Soap\Result\ResultInterface::getResultSet()
+     * @return array
+     * @throws ResultException
      */
     public function getResultSet()
     {
@@ -35,10 +46,8 @@ class ArrayResult implements ResultInterface
     }
 
     /**
-     *
-     * {@inheritDoc}
-     *
-     * @see \Pixi\API\Soap\Result\ResultInterface::setIgnoreErrors()
+     * @param $bool
+     * @return $this|mixed
      */
     public function setIgnoreErrors($bool)
     {
@@ -47,6 +56,10 @@ class ArrayResult implements ResultInterface
     }
 
 
+    /**
+     * @param $result
+     * @return mixed|void
+     */
     public function setResultSet($result)
     {
         if (is_array($result)) {
