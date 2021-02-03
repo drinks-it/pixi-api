@@ -5,7 +5,7 @@
   "require": {
     "php": ">=7.1 <8.0",
     "drinks-it/pixi-factory": "^0.0",
-    "drinks-it/pixi-saxparser": "~1.0",
+    "drinks-it/pixi-saxparser": "~5.2",
     "ext-curl": "*",
     "ext-soap": "*"
   },
