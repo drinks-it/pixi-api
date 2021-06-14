@@ -34,6 +34,7 @@ jobs:
         run: |
           php -r 'foreach (get_loaded_extensions() as $extension) echo $extension . " " . phpversion($extension) . PHP_EOL;'
           php -i
+          composer --version
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
