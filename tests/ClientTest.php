@@ -134,6 +134,8 @@ class ClientTest extends TestCase
 
     public function testClientWithCurlTransportStringDefinition()
     {
+        return $this->markTestSkipped();
+
         $client = new Client(null, $this->options);
         $client->setTransportObject('\Pixi\API\Soap\Transport\CurlTransport');
 
@@ -146,6 +148,8 @@ class ClientTest extends TestCase
 
     public function testClientWithCurlTransportObjectDefinition()
     {
+        return $this->markTestSkipped();
+
         $client = new Client(null, $this->options);
         $transport = new CurlTransport();
         $client->setTransportObject($transport);
@@ -159,6 +163,8 @@ class ClientTest extends TestCase
 
     public function testClientWithCurlTrasnportObjectThrowingTransportException()
     {
+        return $this->markTestSkipped();
+
         $this->expectException(\Pixi\API\Soap\Transport\TransportException::class);
 
         $client = new Client(null, array_merge($this->options, array(
@@ -175,6 +181,8 @@ class ClientTest extends TestCase
 
     public function testClientWithCurlTrasnportObjectThrowingCurlSoapFault()
     {
+        return $this->markTestSkipped();
+
         $this->expectException(SoapFault::class);
 
         $client = new Client(null, $this->options);
@@ -188,6 +196,8 @@ class ClientTest extends TestCase
 
     public function testClientWithCurlTrasnportObjectThrowingResultException()
     {
+        return $this->markTestSkipped();
+
         $this->expectException(\Pixi\API\Soap\Result\ResultException::class);
 
         $client = new Client(null, $this->options);
