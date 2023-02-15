@@ -3,7 +3,7 @@
   "description": "A simple decorator pattern over the native soap client in PHP to make it easier to work with.",
   "license": "MIT",
   "require": {
-    "php": "^7.1 || ^8.0",
+    "php": "^7.1 || ^8.0 || ^8.1 || ^8.2",
     "drinks-it/pixi-factory": "^0.0",
     "drinks-it/pixi-saxparser": "^6.0.0",
     "ext-curl": "*",
