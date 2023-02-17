@@ -91,11 +91,13 @@ class Client extends \SoapClient
 
             $vars = array();
 
+            $uri = $this->uri ?? '';
+
             if (isset($arguments[0]) and is_array($arguments[0]) and count($arguments[0]) > 0) {
 
                 foreach ($arguments[0] as $key => $val) {
 
-                    $vars[] = new \SoapVar($val, null, '', '', $key, $this->uri);
+                    $vars[] = new \SoapVar($val, null, '', '', $key, $uri);
                 }
             }
 
@@ -104,7 +106,7 @@ class Client extends \SoapClient
                 [
                     'http' => [
                         'header' => 'xapp: ' . Environment::getAppId() . "\r\n" .
-                            'soapaction: "' . $this->uri . $function_name . '"' . "\r\n",
+                            'soapaction: "' . $uri . $function_name . '"' . "\r\n",
                     ],
                 ]
             );
