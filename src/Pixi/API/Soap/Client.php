@@ -85,7 +85,7 @@ class Client extends \SoapClient
      * @param array $arguments
      * @return mixed|object|Result\ResultInterface|string
      */
-    public function __call($function_name, $arguments)
+    public function __call($function_name, $arguments): mixed
     {
         if (substr($function_name, 0, 4) == 'pixi') {
 
@@ -138,7 +138,7 @@ class Client extends \SoapClient
      * @param int $oneWay
      * @return string
      */
-    public function __doRequest($request, $location, $action, $version, $oneWay = 0)
+    public function __doRequest($request, $location, $action, $version, $oneWay = 0): ?string
     {
         if ($this->transportObject) {
 
