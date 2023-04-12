@@ -3,14 +3,14 @@
   "description": "A simple decorator pattern over the native soap client in PHP to make it easier to work with.",
   "license": "MIT",
   "require": {
-    "php": "^7.1 || ^8.0 || ^8.1 || ^8.2",
+    "php": "^8.1 || ^8.2",
     "drinks-it/pixi-factory": "^0.0",
     "drinks-it/pixi-saxparser": "^6.0.0",
     "ext-curl": "*",
     "ext-soap": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "~8.1"
+    "phpunit/phpunit": "~9.0 | ~10.0"
   },
   "autoload": {
     "psr-4": {

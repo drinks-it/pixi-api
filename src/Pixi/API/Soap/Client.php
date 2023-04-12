@@ -61,7 +61,7 @@ class Client extends \SoapClient
      * @param string|null $wsdl
      * @param array|null $options
      */
-    public function __construct($wsdl = null, $options = null)
+    public function __construct(?string $wsdl = null, ?array $options = null)
     {
 
         if ($wsdl or $options) {
@@ -81,13 +81,16 @@ class Client extends \SoapClient
     }
 
     /**
-     * @param string $function_name
-     * @param array $arguments
      * @return mixed|object|Result\ResultInterface|string
      */
-    public function __call($function_name, $arguments)
+    public function __soapCall(
+        string $name, array $args,
+        ?array $options = null,
+        $inputHeaders = null,
+        &$outputHeaders = null
+    ): mixed
     {
-        if (substr($function_name, 0, 4) == 'pixi') {
+        if (str_starts_with($name, 'pixi')) {
 
             $vars = array();
 
@@ -106,7 +109,7 @@ class Client extends \SoapClient
                 [
                     'http' => [
                         'header' => 'xapp: ' . Environment::getAppId() . "\r\n" .
-                            'soapaction: "' . $uri . $function_name . '"' . "\r\n",
+                            'soapaction: "' . $uri . $name . '"' . "\r\n",
                     ],
                 ]
             );
@@ -115,19 +118,15 @@ class Client extends \SoapClient
 
             $this->content = $this->getResultObject();
 
-            $result = null;
-
-            $result = parent::__call($function_name, $vars);
+            $result = parent::__soapCall($name, $vars, $options, $inputHeaders, $outputHeaders);
 
             $this->content->setResultSet($result);
 
             return $this->content;
 
-        } else {
-
-            return parent::__call($function_name, $arguments);
-
         }
+
+        return parent::__soapCall($name, $args, $options, $inputHeaders, $outputHeaders);
     }
 
     /**
@@ -138,7 +137,13 @@ class Client extends \SoapClient
      * @param int $oneWay
      * @return string
      */
-    public function __doRequest($request, $location, $action, $version, $oneWay = 0)
+    public function __doRequest(
+        string $request,
+        string $location,
+        string $action,
+        int $version,
+        bool $oneWay = false
+    ): string
     {
         if ($this->transportObject) {
 
@@ -160,7 +165,7 @@ class Client extends \SoapClient
      * @param \Pixi\API\Soap\Options $options
      *            Options for the soap client.
      */
-    public function setPixiOptions($options)
+    public function setPixiOptions($options): void
     {
         $this->__construct(null, $options->getOptions());
     }
