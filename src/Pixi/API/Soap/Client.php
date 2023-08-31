@@ -77,24 +77,24 @@ class Client extends \SoapClient
             parent::__construct($wsdl, $options);
 
         }
-
     }
 
     /**
+     * @param string $function_name
+     * @param array $arguments
      * @return mixed|object|Result\ResultInterface|string
      */
-    public function __soapCall(
-        string $name, array $args,
-        ?array $options = null,
-        $inputHeaders = null,
-        &$outputHeaders = null
-    ): mixed
+    #[\ReturnTypeWillChange]
+    public function __call(string $function_name, array $arguments)
     {
-        if (str_starts_with($name, 'pixi')) {
+        if (substr($function_name, 0, 4) == 'pixi') {
 
             $vars = array();
 
-            $uri = $this->uri ?? '';
+            $uri = '';
+            if (isset($this->uri)) {
+                $uri = $this->uri;
+            }
 
             if (isset($arguments[0]) and is_array($arguments[0]) and count($arguments[0]) > 0) {
 
@@ -109,7 +109,7 @@ class Client extends \SoapClient
                 [
                     'http' => [
                         'header' => 'xapp: ' . Environment::getAppId() . "\r\n" .
-                            'soapaction: "' . $uri . $name . '"' . "\r\n",
+                            'soapaction: "' . $uri . $function_name . '"' . "\r\n",
                     ],
                 ]
             );
@@ -118,15 +118,15 @@ class Client extends \SoapClient
 
             $this->content = $this->getResultObject();
 
-            $result = parent::__soapCall($name, $vars, $options, $inputHeaders, $outputHeaders);
-
-            $this->content->setResultSet($result);
+            $this->content->setResultSet(
+                parent::__call($function_name, $vars)
+            );
 
             return $this->content;
 
         }
 
-        return parent::__soapCall($name, $args, $options, $inputHeaders, $outputHeaders);
+        return parent::__call($function_name, $arguments);
     }
 
     /**
